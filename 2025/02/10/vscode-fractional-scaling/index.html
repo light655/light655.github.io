@@ -9,6 +9,9 @@
 
 
 
+    <meta name="description" content="New laptops with 2880x1800 OLED screens look great. However, I prefer setting the fractional scaling to 175% to fit more content on the screen. Currently on Ubuntu(22.04 &amp;amp; 24.04 in my case), the fractional scaling process cause some applications to become blurry. In this article, I will show you the workarounds to get VSCode and Microsoft Edge look sharp again. However, there are still other apps that I unfortunately don’t have a fix(Kicad, Rawtherapee to name a few).
+Also, I’ll show you how to modify the laucher .desktop file so that the flags we added later will be applied when you click the icon in the laucher."/>
+
 
 <!--Author-->
 
@@ -17,10 +20,13 @@
 
 <!--Open Graph Title-->
 
-    <meta property="og:title" content="light655"/>
+    <meta property="og:title" content="Fixing blurry VSCode, Microsoft Edge on Ubuntu with fractional scaling"/>
 
 
 <!--Open Graph Description-->
+
+    <meta property="og:description" content="New laptops with 2880x1800 OLED screens look great. However, I prefer setting the fractional scaling to 175% to fit more content on the screen. Currently on Ubuntu(22.04 &amp;amp; 24.04 in my case), the fractional scaling process cause some applications to become blurry. In this article, I will show you the workarounds to get VSCode and Microsoft Edge look sharp again. However, there are still other apps that I unfortunately don’t have a fix(Kicad, Rawtherapee to name a few).
+Also, I’ll show you how to modify the laucher .desktop file so that the flags we added later will be applied when you click the icon in the laucher."/>
 
 
 <!--Open Graph Site Name-->
@@ -28,7 +34,7 @@
 
 <!--Type page-->
 
-    <meta property="og:type" content="website"/>
+    <meta property="og:type" content="article"/>
 
 
 <!--Page Cover-->
@@ -47,7 +53,7 @@
 
 <!-- Title -->
 
-<title>light655</title>
+<title>Fixing blurry VSCode, Microsoft Edge on Ubuntu with fractional scaling | light655</title>
 
 <!-- Bootstrap Core CSS -->
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
@@ -113,143 +119,137 @@
 
     <!-- Main Content -->
     <!-- Page Header -->
-<!-- Set your background image for this header in the theme's configuration: index_cover -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
 <header class="intro-header" style="background-image: url('/img/home-bg-new.png')">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 offset-md-2 col-md-10 offset-md-1">
-                <div class="site-heading text-center text-white">
-                    <h1>light655</h1>
-                    <hr class="small">
-                    <span class="subheading d-block">A Taiwanese EE college student making all sorts of electronics when he is supposed to sleep.</span>
+            <div class="col-lg-12 col-md-12 text-center">
+                <div class="post-heading text-white">
+                    <h1>Fixing blurry VSCode, Microsoft Edge on Ubuntu with fractional scaling</h1>
+                    
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container page-index">
-    <div class="row">
-        <div class="col-lg-8 offset-md-2 col-md-10 offset-md-1">
-            
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
                 
-            
-                
-            
-                
-            
-                
-            
-        </div>
-        <div class="col-lg-8 offset-md-2 col-md-10 offset-md-1 post-all">    
-            
-                
-                    <div class="post-preview post-preview-index">
-    <a href="/2025/02/10/vscode-fractional-scaling/">
-        <h2 class="post-title">
-            Fixing blurry VSCode, Microsoft Edge on Ubuntu with fractional scaling
-        </h2>
-        
-    </a>
-    <p class="post-meta">
-        <!-- Date and Author -->
-        
+                    <span class="meta d-inline-block">
+    
+    
+    <!-- Date -->
+    
+        <span class="post-meta-split">&nbsp;|&nbsp;</span>
+        <i class="far fa-calendar-check fa-fw"></i>
         2025-02-10
-    </p>
     
-        <p class="post-preview">
-        <p>New laptops with 2880x1800 OLED screens look great. However, I prefer setting the fractional scaling to 175% to fit more content on the screen. Currently on Ubuntu(22.04 &amp; 24.04 in my case), the fractional scaling process cause some applications to become blurry. In this article, I will show you the workarounds to get VSCode and Microsoft Edge look sharp again. However, there are still other apps that I unfortunately don’t have a fix(Kicad, Rawtherapee to name a few).</p>
+    <!-- word count and read count -->
+    
+
+    
+
+    
+</span>  
+                
+                <p>New laptops with 2880x1800 OLED screens look great. However, I prefer setting the fractional scaling to 175% to fit more content on the screen. Currently on Ubuntu(22.04 &amp; 24.04 in my case), the fractional scaling process cause some applications to become blurry. In this article, I will show you the workarounds to get VSCode and Microsoft Edge look sharp again. However, there are still other apps that I unfortunately don’t have a fix(Kicad, Rawtherapee to name a few).</p>
 <p>Also, I’ll show you how to modify the laucher .desktop file so that the flags we added later will be applied when you click the icon in the laucher.</p>
-        <a href="/2025/02/10/vscode-fractional-scaling/" style="float:right"> Read more... </a>
-        </p>
-    
-</div>
-<hr>
-                
+<span id="more"></span>
+
+<h2 id="Microsoft-Edge"><a href="#Microsoft-Edge" class="headerlink" title="Microsoft Edge"></a>Microsoft Edge</h2><p>We need to make Microsoft Edge run with Wayland to have proper fractional scaling. Try adding the <code>--ozone-platform-hint=auto</code> flag to make Microsoft Edge run with Wayland. Launch Microsoft Edge from the terminal with the following command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">microsoft-edge --ozone-platform-hint=auto</span><br></pre></td></tr></table></figure>
+
+<p>This should fix the blurry issue(at least it did on my machine). However, if you use fcitx for keyboard input, this will break it. Luckily, there is a fix for this. Adding the <code>--gtk-version=4</code> flag when lauching edge should solve the issue.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">microsoft-edge --ozone-platform-hint=auto --gtk-version=4</span><br></pre></td></tr></table></figure>
+
+<p>To modify the .desktop file, locate the original .desktop file and copy it somewhere that doesn’t require sudo permission to edit(it’s not a necessary step but it will be our lives easier). That file is usually located at <code>/usr/share/applications/microsoft-edge.desktop</code>.</p>
+<p>In the .desktop file, find all lines starting with “Exec” and add the flags. Next, we need to install the .desktop file for the laucher to be updated.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> desktop-file-install microsoft-edge.desktop</span><br><span class="line"><span class="built_in">sudo</span> update-desktop-database</span><br></pre></td></tr></table></figure>
+<p>Note that the two commands above should be executed in the same directory containing the modified .desktop file.</p>
+<h2 id="VSCode"><a href="#VSCode" class="headerlink" title="VSCode"></a>VSCode</h2><p>First of all, make sure that you’re not using the Snap version of VSCode. If you downloaded it from the App Centre on Ubuntu, that’s the Snap version. Uninstall it and download and install the .deb file from microsoft’s website.</p>
+<p>Next, by launching VSCode with the <code>--ozone-platform-hint=auto</code> flag, the blurriness should be removed.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">code --ozone-platform-hint=auto</span><br></pre></td></tr></table></figure>
+
+<p>However, VSCode seems to not work with fcitx no matter what flag I add. So if you need input method provided by fcitx, you need to type it in another text editor and copy it into VSCode.</p>
+<p>When modifying the .desktop file, the process is the same as above. Just note that the file for VSCode is named <code>code.desktop</code>, and we only need to add the <code>--ozone-platform-hint=auto</code> since the other one doesn’t work.</p>
+
+            </div>
+
+            <!-- Post information -->
             
-                
-                    <div class="post-preview post-preview-index">
-    <a href="/2025/02/04/ADS1115-cont/">
-        <h2 class="post-title">
-            Interfacing the ADS1115 ADC in continuous mode
-        </h2>
-        
-    </a>
-    <p class="post-meta">
-        <!-- Date and Author -->
-        
-        2025-02-04
-    </p>
-    
-        <p class="post-preview">
-        <p>ADS1115 is a 16-bit delta-sigma analogue to digital converter(ADC) designed by Texas Instruments. It has a maximum sampling rate of 860 samples per second. However, the maximum sampling rate can only be achieved in continuous mode. This article provides an Arduino example of how to interface the ADS1115 in continuous mode.</p>
-<p><img src="/image/ADS1115-cover.jpg"></p>
-        <a href="/2025/02/04/ADS1115-cont/" style="float:right"> Read more... </a>
-        </p>
-    
-</div>
-<hr>
-                
             
-                
-                    <div class="post-preview post-preview-index">
-    <a href="/2025/01/05/kicad-spice/">
-        <h2 class="post-title">
-            SPICE simulation with Kicad
-        </h2>
-        
-    </a>
-    <p class="post-meta">
-        <!-- Date and Author -->
-        
-        2025-01-05
-    </p>
-    
-        <p class="post-preview">
-        <p>Kicad is an open-source electronics design suite, mainly used in PCB design. It also has built-in Ngspice simulator to simulator circuit behaviours. In this airticle, we will go through the basic setup of SPICE simulation in Kicad and how to find extra SPICE models.</p>
-<p><img src="/image/kicad-spice/kicad-spice-cover.png"></p>
-        <a href="/2025/01/05/kicad-spice/" style="float:right"> Read more... </a>
-        </p>
-    
-</div>
-<hr>
-                
+    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+        <ul class="pagination d-block text-center">
             
-                
-                    <div class="post-preview post-preview-index">
-    <a href="/2024/11/20/TMAG5170/">
-        <h2 class="post-title">
-            TMAG5170 3D Hall-effect sensor
-        </h2>
-        
-    </a>
-    <p class="post-meta">
-        <!-- Date and Author -->
-        
-        2024-11-20
-    </p>
-    
-        <p class="post-preview">
-        <p>TMAG5170 is a 3-axis precision Hall effect sensor designed by Texas Instruments. On top of the Hall effect sensor, there is a temperature sensor and angle calculator intergrated in the IC. The functions of the IC can be interfaced with SPI. There are two variant of this IC, A1 and A2, the two variants differ in measuring range.</p>
-<p><img src="/image/TMAG5170-pinout.png" alt="(Source: Texas Instruments)"></p>
-        <a href="/2024/11/20/TMAG5170/" style="float:right"> Read more... </a>
-        </p>
-    
-</div>
-<hr>
-                
             
-        </div>
-        <div class="col-lg-8 offset-md-2 col-md-10 offset-md-1 post-all">    
-            <ul class="pagination d-block text-center">
-    
-    
-</ul>
+                <li class="next page-item d-inline"><a href="/2025/02/04/ADS1115-cont/" class="page-link float-right">Older  &rarr;</a></li>
+            
+        </ul>
+    </div>
+
+
+            
+                <!-- Comments -->
+                
+
+                
+
+            
+
         </div>
     </div>
-</div>
+</article> 
 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+    <style>
+        #toc-content .toc-link::before {
+            background-color: transparent;
+            max-height: 25px;
+        }
+
+        #toc-content .toc-link.is-active-link::before {
+            background-color: #404040;
+        }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+    <div class="ui-toc dropup scrollspy-body pull-right" style="right: 3%;">
+        <button type="button" class="toc-btn btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+            <i class="fas fa-list"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right p-2"  aria-labelledby="tocLabel">
+            <div class="toc-widget">
+                <div id="toc-content" class="text-truncate">
+                </div>
+            </div>
+            <div class="toc-menu pt-3 pl-4">
+                <a class="expand-toggle d-block py-1" href="#"><span class="expand-text">Expand all</span><span class="close-text" style="display: none;">Collapse all</span></a>
+                <a class="back-to-top d-block py-1" href="#">Back to top</a>
+                <a class="go-to-bottom d-block py-1" href="#">Go to bottom</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        tocbot.init({
+            // Where to render the table of contents.
+            tocSelector: '#toc-content',
+            // Where to grab the headings to build the table of contents.
+            contentSelector: 'article',
+            // Which headings to grab inside of the contentSelector element.
+            headingSelector: 'h1, h2, h3',
+            // For headings inside relative or absolute positioned containers within content.
+            hasInnerContainers: true,
+        });
+    </script>
+
+
+    
 
 
     <!-- Footer -->
