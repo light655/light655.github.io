@@ -9,7 +9,7 @@
 
 
 
-    <meta name="description" content="Chen, Liang-Yu is a EE college student at National Tsing Hua University, Hsinchu, Taiwan. His research area is power electronic devices. He is also th"/>
+    <meta name="description" content="The 74HC595 shift register is one of the most popular 74 series IC these days. It is often used to convert serial data into parallel and drive LEDs. A project of mine used it drive multiple LEDs. This made me wonder how much current can this IC actually supply. Therefore, I did some testing on the driving capability of the 74HC595 shift register."/>
 
 
 <!--Author-->
@@ -19,12 +19,12 @@
 
 <!--Open Graph Title-->
 
-    <meta property="og:title" content="About"/>
+    <meta property="og:title" content="Testing the driving capability of the 74HC595 shift register"/>
 
 
 <!--Open Graph Description-->
 
-    <meta property="og:description" content="Chen, Liang-Yu is a EE college student at National Tsing Hua University, Hsinchu, Taiwan. His research area is power electronic devices. He is also th"/>
+    <meta property="og:description" content="The 74HC595 shift register is one of the most popular 74 series IC these days. It is often used to convert serial data into parallel and drive LEDs. A project of mine used it drive multiple LEDs. This made me wonder how much current can this IC actually supply. Therefore, I did some testing on the driving capability of the 74HC595 shift register."/>
 
 
 <!--Open Graph Site Name-->
@@ -51,7 +51,7 @@
 
 <!-- Title -->
 
-<title>About | light655</title>
+<title>Testing the driving capability of the 74HC595 shift register | light655</title>
 
 <!-- Bootstrap Core CSS -->
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
@@ -124,7 +124,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 text-center">
                 <div class="post-heading text-white">
-                    <h1>About</h1>
+                    <h1>Testing the driving capability of the 74HC595 shift register</h1>
                     
                 </div>
             </div>
@@ -139,16 +139,45 @@
             <!-- Post Main Content -->
             <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
                 
-                <p><img src="/about/head.webp"></p>
-<p>Chen, Liang-Yu is a EE college student at National Tsing Hua University, Hsinchu, Taiwan. His research area is power electronic devices. He is also the member of <a href="nthuee.org">822 Maker Space</a> at NTHUEE.</p>
-<p>In his free time, he makes all sorts of electronics, with special focus on low-cost prototyping tools and testing equipments. Some of his creations are availabe for purchase on Tindie.</p>
-<p><a target="_blank" rel="noopener" href="https://www.tindie.com/"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-larges.png"></a></p>
+                    <span class="meta d-inline-block">
+    
+    
+    <!-- Date -->
+    
+        <span class="post-meta-split">&nbsp;|&nbsp;</span>
+        <i class="far fa-calendar-check fa-fw"></i>
+        2025-05-13
+    
+    <!-- word count and read count -->
+    
+
+    
+
+</span>  
+                
+                <p>The 74HC595 shift register is one of the most popular 74 series IC these days. It is often used to convert serial data into parallel and drive LEDs. A project of mine used it drive multiple LEDs. This made me wonder how much current can this IC actually supply. Therefore, I did some testing on the driving capability of the 74HC595 shift register.</p>
+<p><div class="img-item" data-src="/image/74hc595-output-testing/74hc595-testing-breadboard.jpg" data-sub-html=".caption"><img src="/image/74hc595-output-testing/74hc595-testing-breadboard.jpg" alt="The test setup on a breadboard."><div class="img-caption d-block text-center"><span class="center-caption text-muted border-bottom">The test setup on a breadboard.</span></div></div></p>
+<span id="more"></span>
+
+<p>I used a 2N7000 transistor to sink current from one of the outputs on the 74HC595. The voltage and current are measured to find the IV curve of the 74HC595 output. The 74HC595 is operated with a 5V supply. The current is sensed from a 10Ω resistor and is amplified with a OP177 precision opamp by a gain of 5. The opamp is biased at $\pm5\mathrm{V}$. The gate voltage $V_G$ of the 2N7000 is provided by the wave generator of an Analog Devices ADALM2000, the waveform is a triangular wave at a frequency of 100Hz. The output of the amplifier $V_{sense}$ is then measured with the oscilloscope on the ADALM2000. The voltage of the 74HC595 output $V_{out}$ is also measured by the oscilloscope on the ADALM2000.<br><div class="img-item" data-src="/image/74hc595-output-testing/74hc595-testing-schematic.png" data-sub-html=".caption"><img src="/image/74hc595-output-testing/74hc595-testing-schematic.png" alt="The schematic of the test setup."><div class="img-caption d-block text-center"><span class="center-caption text-muted border-bottom">The schematic of the test setup.</span></div></div></p>
+<p>The tolerance of the resistance is considered during the post-processing of data. The measured resistances of the resistors on the signal chain is $R_2&#x3D;10.3\mathrm{\Omega}$, $R_6&#x3D;9.92\mathrm{k\Omega}$ and $R_6&#x3D;39.7\mathrm{k\Omega}$. Thus, the total trans-impedance gain from the output current $I_{out}$ to the measured voltage $V_{sense}$ is $51.5\mathrm{\Omega}$. Dividing the measured value of $V_{sense}$ by the trans-impedance gain gives the output current $I_{out}$ of the 74HC595.</p>
+<p><div class="img-item" data-src="/image/74hc595-output-testing/74hc595-testing-plot.png" data-sub-html=".caption"><img src="/image/74hc595-output-testing/74hc595-testing-plot.png" alt="The testing result. The output current vs output voltage of the 74HC595."><div class="img-caption d-block text-center"><span class="center-caption text-muted border-bottom">The testing result. The output current vs output voltage of the 74HC595.</span></div></div></p>
+<p>The output voltage of the 74HC595 degrades as we draw more current. When the current draw is more than 40mA, the output voltage drops more rapidly. For the linear section(below 40mA), the output of the 74HC595 can be modelled as a Thevenin source with voltage $V_T&#x3D;5\mathrm{V}$ and resistance $R_T&#x3D;36.7\mathrm{\Omega}$. The linear IV characteristic of this model is plotted as the red dashed line on the figure above.</p>
 
             </div>
 
             <!-- Post information -->
             
             
+    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+        <ul class="pagination d-block text-center">
+            
+            
+                <li class="next page-item d-inline"><a href="/2025/02/10/vscode-fractional-scaling/" class="page-link float-right">Older  &rarr;</a></li>
+            
+        </ul>
+    </div>
+
 
             
                 <!-- Comments -->
@@ -204,6 +233,13 @@
         });
     </script>
 
+
+    <script src="//cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script>
+        MathJax.Hub.Config({
+            tex2jax:{inlineMath:[['$', '$']]}
+        })
+    </script>
 
     
 
