@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <title>Operating the ADS1115 ADC in continuous mode with Arduino | light655</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="/static/m-dark.css" />
+  <link rel="canonical" href="/Blog/ADS1115.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#cb4b16" />
+  <meta property="og:site_name" content="light655" />
+  <meta property="og:title" content="Operating the ADS1115 ADC in continuous mode with Arduino" />
+  <meta name="twitter:title" content="Operating the ADS1115 ADC in continuous mode with Arduino" />
+  <meta property="og:url" content="/Blog/ADS1115.html" />
+  <meta property="og:description" content="ADS1115 is a 16-bit delta-sigma analogue to digital converter(ADC) designed by Texas Instruments. It has a maximum sampling rate of 860 samples per second. However, the maximum sampling rate can only be achieved in continuous mode. This article provides an Arduino example of how to interface the ADS1115 in continuous mode." />
+  <meta name="twitter:description" content="ADS1115 is a 16-bit delta-sigma analogue to digital converter(ADC) designed by Texas Instruments. It has a maximum sampling rate of 860 samples per second. However, the maximum sampling rate can only be achieved in continuous mode. This article provides an Arduino example of how to interface the ADS1115 in continuous mode." />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="/" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">light655</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="/blab.html">Blab</a></li>
+            <li><a href="/Blog/">Blog</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="/docs/">Documentation</a></li>
+            <li><a href="/Product/">Product</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="/Blog/ADS1115.html" rel="bookmark" title="Permalink to Operating the ADS1115 ADC in continuous mode with Arduino">
+          <time class="m-date" datetime="2025-02-04T00:00:00+08:00">
+            Feb <span class="m-date-day">04</span> 2025
+          </time>
+          Operating the ADS1115 ADC in continuous mode with Arduino
+        </a></h1>
+        <p>ADS1115 is a 16-bit delta-sigma analogue to digital converter(ADC) designed by Texas Instruments.
+        It has a maximum sampling rate of 860 samples per second.
+        However, the maximum sampling rate can only be achieved in continuous mode.
+        This article provides an Arduino example of how to interface the ADS1115 in continuous mode.</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<figure class="m-figure">
+<img alt="An ADS1115 ADC module connected to an Arduino Uno." src="/data/ADS1115/ADS1115-cover.jpg" />
+</figure>
+<p>In continuous mode, the ADS1115 starts the conversion automatically as soon as the last conversion is finished.
+The chip will also send a signal via the ALERT pin when a conversion is finished.
+We will attach an interrupt to the ALERT pin and use it to trigger the Arduino to read the conversion result.</p>
+<p>I will use the Arduino Uno in this example, it only supports interrupt on pins 2 and 3.
+Connect the pins as the following table to the Arduino.</p>
+<table class="m-table">
+<thead>
+<tr><th>ADS1115</th>
+<th>Arduino Uno</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>VDD</td>
+<td>5V</td>
+</tr>
+<tr><td>GND</td>
+<td>GND</td>
+</tr>
+<tr><td>SCL</td>
+<td>A5</td>
+</tr>
+<tr><td>SDA</td>
+<td>A4</td>
+</tr>
+<tr><td>ADDR</td>
+<td>not connected</td>
+</tr>
+<tr><td>ALRT</td>
+<td>D3</td>
+</tr>
+</tbody>
+</table>
+<p>To make our lives easier, let's first install the <a href="https://github.com/adafruit/Adafruit_ADS1X15">ADS1X15 library from Adafruit</a>.</p>
+<figure class="m-figure">
+<img alt="Adafruit ADS1X15 library in the library manager in Arduion IDE." src="/data/ADS1115/ADS1115-lib.png" />
+</figure>
+<p>First, we need to instantiate an Adafruit_ADS1115 object.
+We'll also setup some other variables.</p>
+<pre class="m-code"><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Adafruit_ADS1X15.h&gt;</span>
+
+<span class="n">Adafruit_ADS1115</span><span class="w"> </span><span class="n">myADS</span><span class="p">;</span>
+<span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">t0</span><span class="p">;</span>
+<span class="kt">int16_t</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+<span class="n">String</span><span class="w"> </span><span class="n">str</span><span class="p">;</span></pre>
+<p>Next, since we are using interrupt, we need a callback function for the interrupt service routine.
+The callback function will set the <code class="m-code"><span class="n">new_data</span></code> variable to true when the interrupt is triggered.</p>
+<pre class="m-code"><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">intPin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="k">volatile</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">new_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">newDataReady</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">new_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span></pre>
+<p>In the <code class="m-code"><span class="n">setup</span><span class="p">()</span></code> function, we need to:</p>
+<ul>
+<li>Begin serial communication</li>
+<li>Attach interrupt</li>
+<li>Setup ADS1115 for continuous mode</li>
+<li>Read initial time</li>
+</ul>
+<pre class="m-code"><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+
+<span class="c1">// The convertion is ready on the falling edge of a pulse at the ALERT/RDY pin.</span>
+<span class="n">attachInterrupt</span><span class="p">(</span><span class="n">digitalPinToInterrupt</span><span class="p">(</span><span class="n">intPin</span><span class="p">),</span><span class="w"> </span><span class="n">newDataReady</span><span class="p">,</span><span class="w"> </span><span class="n">FALLING</span><span class="p">);</span>
+
+<span class="n">myADS</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+<span class="n">myADS</span><span class="p">.</span><span class="n">setGain</span><span class="p">(</span><span class="n">GAIN_FOUR</span><span class="p">);</span><span class="w">   </span><span class="c1">// +- 1.024V range</span>
+<span class="n">myADS</span><span class="p">.</span><span class="n">setDataRate</span><span class="p">(</span><span class="n">RATE_ADS1115_860SPS</span><span class="p">);</span>
+<span class="n">myADS</span><span class="p">.</span><span class="n">startADCReading</span><span class="p">(</span><span class="n">ADS1X15_REG_CONFIG_MUX_SINGLE_0</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<span class="c1">// We should set &quot;continuous&quot; to true to reach optimal speed.</span>
+
+<span class="n">t0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">micros</span><span class="p">();</span>
+<span class="p">}</span></pre>
+<p>For the serial communication, we need a higher baud rate to send data to the computer fast enough.
+We'll use 115200 here.</p>
+<p>The ALERT pin is connected to <code class="m-code"><span class="n">intPin</span></code>, and the interrupt will trigger on the falling edge.
+This is because the ADS1115 will pull the ALERT pin low when the conversion is finished.</p>
+<p>The key lies in the last line.
+<strong>In the</strong> <code class="m-code"><span class="n">startADCReading</span><span class="p">()</span></code> <strong>function, we need to set the second parameter to true</strong>, which will put the ADS1115 into continuous mode.
+The first parameter selects the channel, we are reading channel 0 single ended in this example.
+There are a lot of other setting that you can tweak, see the Adafruit_ADS1X15.h file for more information.</p>
+<p>We'll also set the <code class="m-code"><span class="n">t0</span></code> variable to store the initial time in microseconds.</p>
+<p>Finally, in the <code class="m-code"><span class="n">loop</span><span class="p">()</span></code> function, we can read the ADS1115 when the <code class="m-code"><span class="n">new_data</span></code> variable is true, and print the result through the serial port.
+Remember to clear the <code class="m-code"><span class="n">new_data</span></code> variable after reading the ADS1115.
+I'll also print the time in microseconds to check the sampling rate.</p>
+<pre class="m-code"><span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">new_data</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="c1">// Don&#39;t call the ADC until we receive a convertion complete signal.</span>
+
+<span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myADS</span><span class="p">.</span><span class="n">getLastConversionResults</span><span class="p">();</span>
+<span class="n">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">micros</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">;</span>
+<span class="n">str</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="p">;</span>
+<span class="n">str</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+
+<span class="n">new_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span></pre>
+<p>After uploading the code to the Arduino, we can open the serial monitor to see the result.
+Remember to set the buad rate to 115200.</p>
+<figure class="m-figure">
+<img alt="Output of our code with time stamps of each measurement." src="/data/ADS1115/ADS1115-result.png" />
+<figcaption>Output of our code with time stamps of each measurement. You can download the complete .ino file <a href="/data/ADS1115/speedy_ADC_demo.ino">here</a>.</figcaption>
+</figure>
+<p>The first column of the output is the time in microseconds.
+The output of the ADC is printed on the second column.
+The output of ADS1115 can be both positive and negative depending on the polarity of the input voltage.
+We can see that the time difference between two lines is around 1130 microseconds, which is just over 860 Hz.</p>
+<section id="reference">
+<h2>Reference</h2>
+<ul>
+<li><a href="https://www.ti.com/lit/ds/symlink/ads1115.pdf?ts=1768125688590">ADS1115 datasheet</a></li>
+</ul>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2025-02-04T00:00:00+08:00">Tue 04 February 2025</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-01-11T00:00:00+08:00">Sun 11 January 2026</time></span> Tags: <a href="/tag/ads1115.html">ADS1115</a>, <a href="/tag/adc.html">ADC</a>, <a href="/tag/arduino.html">Arduino</a>.</p>
+      </footer>
+    </article>
+<!--     <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="/Blog/">Blog</a></li>
+        <li><a href="/Product/">Product</a></li>
+      </ol>
+      <h3>Tag cloud</h3>
+      <ul class="m-tagcloud">
+        <li class="m-tag-2"><a href="/tag/8-bit.html">8-bit</a></li>
+        <li class="m-tag-2"><a href="/tag/adc.html">ADC</a></li>
+        <li class="m-tag-2"><a href="/tag/ads1115.html">ADS1115</a></li>
+        <li class="m-tag-3"><a href="/tag/arduino.html">Arduino</a></li>
+        <li class="m-tag-5"><a href="/tag/breadboard.html">Breadboard</a></li>
+        <li class="m-tag-2"><a href="/tag/display.html">Display</a></li>
+        <li class="m-tag-2"><a href="/tag/efuse.html">eFuse</a></li>
+        <li class="m-tag-2"><a href="/tag/flash.html">Flash</a></li>
+        <li class="m-tag-2"><a href="/tag/fpga.html">FPGA</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-effect.html">Hall Effect</a></li>
+        <li class="m-tag-2"><a href="/tag/hexadecimal.html">Hexadecimal</a></li>
+        <li class="m-tag-2"><a href="/tag/kicad.html">Kicad</a></li>
+        <li class="m-tag-2"><a href="/tag/overcurrent-protection.html">Overcurrent Protection</a></li>
+        <li class="m-tag-2"><a href="/tag/pmod.html">PMOD</a></li>
+        <li class="m-tag-2"><a href="/tag/power-supply.html">Power Supply</a></li>
+        <li class="m-tag-2"><a href="/tag/raspberry-pi-pico.html">Raspberry Pi Pico</a></li>
+        <li class="m-tag-2"><a href="/tag/register.html">Register</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2040.html">RP2040</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2350.html">RP2350</a></li>
+        <li class="m-tag-2"><a href="/tag/sensor.html">Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/serial-wire-debug.html">Serial Wire Debug</a></li>
+        <li class="m-tag-2"><a href="/tag/simulation.html">Simulation</a></li>
+        <li class="m-tag-2"><a href="/tag/spice.html">SPICE</a></li>
+        <li class="m-tag-2"><a href="/tag/st7735.html">ST7735</a></li>
+        <li class="m-tag-2"><a href="/tag/stm32.html">STM32</a></li>
+        <li class="m-tag-2"><a href="/tag/tmag5170.html">TMAG5170</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+ -->
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>light655. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <title>STM32, Arduino environment, ST7735 screen. Bugs and workarounds. | light655</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="/static/m-dark.css" />
+  <link rel="canonical" href="/Blog/ST7735_bug.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#cb4b16" />
+  <meta property="og:site_name" content="light655" />
+  <meta property="og:title" content="STM32, Arduino environment, ST7735 screen. Bugs and workarounds." />
+  <meta name="twitter:title" content="STM32, Arduino environment, ST7735 screen. Bugs and workarounds." />
+  <meta property="og:url" content="/Blog/ST7735_bug.html" />
+  <meta property="og:description" content="I was working with the ST7735 screen in a project at NTHUEE 822 Maker Space. We were controlling the screen with an STM32F103C8T6 Blue Pill and Adafruit&#39;s ST7735 &amp; ST7789 library. And we ran into a very interesting bug, which was caused by the value of &#34;pins&#34; in the STM32 Arduino core. In this article, I will explain the cause of the bug and the workaround for current version of the libraries." />
+  <meta name="twitter:description" content="I was working with the ST7735 screen in a project at NTHUEE 822 Maker Space. We were controlling the screen with an STM32F103C8T6 Blue Pill and Adafruit&#39;s ST7735 &amp; ST7789 library. And we ran into a very interesting bug, which was caused by the value of &#34;pins&#34; in the STM32 Arduino core. In this article, I will explain the cause of the bug and the workaround for current version of the libraries." />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="/" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">light655</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="/blab.html">Blab</a></li>
+            <li><a href="/Blog/">Blog</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="/docs/">Documentation</a></li>
+            <li><a href="/Product/">Product</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="/Blog/ST7735_bug.html" rel="bookmark" title="Permalink to STM32, Arduino environment, ST7735 screen. Bugs and workarounds.">
+          <time class="m-date" datetime="2026-01-17T00:00:00+08:00">
+            Jan <span class="m-date-day">17</span> 2026
+          </time>
+          STM32, Arduino environment, ST7735 screen. Bugs and workarounds.
+        </a></h1>
+        <p>I was working with the ST7735 screen in a project at <a href="https://nthuee.org/index.html">NTHUEE 822 Maker Space</a>.
+        We were controlling the screen with an STM32F103C8T6 Blue Pill and <a href="https://github.com/adafruit/Adafruit-ST7735-Library">Adafruit's ST7735 &amp; ST7789 library</a>.
+        And we ran into a very interesting bug, which was caused by the value of &quot;pins&quot; in the <a href="https://github.com/stm32duino/Arduino_Core_STM32">STM32 Arduino core</a>.
+        In this article, I will explain the cause of the bug and the workaround for current version of the libraries.</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<img class="m-image" src="/data/ST7735_bug/working_1.webp" />
+<aside class="m-note m-success">
+<h3>TL;DR</h3>
+<p>Don't use pins PA0 to PA9 for the CS and RST signals.</p>
+</aside>
+<section id="brief-introduction-of-the-st7735-screen">
+<h2>Brief introduction of the ST7735 screen</h2>
+<p>No, the &quot;ST&quot; in ST7735 does not mean ST Microelectronics.
+It is a display controller IC made by another company call Sitronix.
+It communicates with the microcontroller through SPI and some additional signals like data/command and reset.
+Since we are just using Adafruit's library, I'm not diving into the details of the ST7735.
+But please remember the reset signal, it will become one of today's focus.</p>
+<p>I do have a complaint about the naming of the screen module's pins.
+Although the screen uses SPI, the communication pins on the module is named as SCL and SDA, which is for I2C.
+They should be named SCLK and MOSI, respectively.</p>
+</section>
+<section id="stm32-blue-pill-arduino-core">
+<h2>STM32 Blue Pill &amp; Arduino core</h2>
+<p>Since most members of our team never used an STM32 before, we decided to use the STM32 Arduino core and programme it with Arduino IDE.
+We were only making a game, so the trade off between performance and developing time was worth it.
+To upload the compiled binaries to the STM32, we used a Raspberry Pi Pico as an SWD adapter.</p>
+</section>
+<section id="the-example-code-from-adafruit-s-library">
+<h2>The example code from Adafruit's library</h2>
+<p>Adafruit wrote an excellent example code (graphicstest) to get us started.
+It includes a very detailed guide on different ways to initialise the screen and SPI.
+We can initialise the ST7735 with or without the reset and chip select signals, or use custom SPI pins.
+I highly recommend reading through all the comments in this example to learn about the library.</p>
+<img alt="Adafruit example code in the ST7735 library." class="m-image" src="/data/ST7735_bug/example_1.webp" />
+<p>In our initial testing, we used all signals and the default SPI pins on the STM32F103C8T6.
+The wiring between the Blue Pill and the screen is listed in the table below.</p>
+<aside class="m-note m-info">
+<h3>Note:</h3>
+<p>The wiring for the workaround will be slightly different.</p>
+</aside>
+<table class="m-table">
+<thead>
+<tr><th>Screen</th>
+<th>STM32</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GND</td>
+<td>GND</td>
+</tr>
+<tr><td>VDD</td>
+<td>3.3V</td>
+</tr>
+<tr><td>SCL</td>
+<td>PA5</td>
+</tr>
+<tr><td>SDA</td>
+<td>PA7</td>
+</tr>
+<tr><td>RST</td>
+<td>PA4</td>
+</tr>
+<tr><td>DC</td>
+<td>PA3</td>
+</tr>
+<tr><td>CS</td>
+<td>PA2</td>
+</tr>
+<tr><td>BLK</td>
+<td>not connected</td>
+</tr>
+</tbody>
+</table>
+<p>I modified the aforementioned example code to use the correct pins on the STM32.</p>
+<img class="m-image" src="/data/ST7735_bug/pinout_1.webp" />
+<p>After compiling and uploading, we were met with a white blank screen.
+If the example is running correctly, it should look like <a href="https://www.youtube.com/watch?v=NRWx9-xvzVk">this</a> (not my video).
+We recompiled the code for a Raspberry Pi Pico 2 running <a href="https://github.com/earlephilhower/arduino-pico">arduino-pico</a> and the code worked without any issue.
+Something very weird went wrong.</p>
+<img class="m-image" src="/data/ST7735_bug/white.webp" />
+</section>
+<section id="investigation">
+<h2>Investigation</h2>
+<p>We used a logic analyser to look at the signals between the ST7735 and the STM32.
+We found two signals being abnormal.
+First, the chip select signal is always high, which means that the chip is never selected.
+Second, the reset signal never goes low during startup.</p>
+<figure class="m-figure">
+<img src="/data/ST7735_bug/scopy.webp" />
+<figcaption>The waveform captured by the logic analyser.<div class="m-figure-description">
+The signals are CS, DC, RST, MOSI and SCLK from top to bottom.</div>
+</figcaption>
+</figure>
+<p>Then, we looked into the source code of the Adafruit ST7735 to figure out what went wrong.
+The CS and RST pins on the ST7735 is optional in this library and the way to disable it is to set them to -1.
+However, the Adafruit library actually <strong>treats all &quot;negative pin numbers&quot; as disabled</strong>, as shown below.
+But, why will the pin number be negative?</p>
+<figure class="m-figure">
+<img src="/data/ST7735_bug/st7735_src.webp" />
+<figcaption>Source code from Adafruit's ST7735 library.<div class="m-figure-description">
+The pin variable has to be greater than or equal to 0, otherwise the RST or CS pin will be treated as disabled.</div>
+</figcaption>
+</figure>
+<p>To find out why, we need to look at the definitions in the STM32 Arduino core.
+What does the macro PA2 actually stand for?
+It turns out to be 0xC2 in hexadecimal, <strong>which is -62 in decimal if intepreted as 8-bit signed integer</strong>.
+Therefore, although we supplied a valid pin number for the CS pin, the library still determines that we are disabling this pin.
+The same story goes for the RST pin as well.</p>
+</section>
+<section id="workaround">
+<h2>Workaround</h2>
+<p>If we look at the pin macro definitions in the STM32 Arduino core, we can find some interesting definitions.
+The pins that are connected to the ADC has an extra layer of macros, which ultimately lead to value between 0xC0 and 0xC9.</p>
+<figure class="m-figure">
+<img src="/data/ST7735_bug/stm32_src.webp" />
+<figcaption>The macro definitions in the STM32 Arduino core source file.<div class="m-figure-description">
+Pins PA0 to PA9 has an extra layer of macros, which is the cause of the issue.</div>
+</figcaption>
+</figure>
+<p>The simple workaround is to <strong>avoid PA0 to PA9 for the CS and RST signals</strong>.
+I moved my CS and RST signals to PB11 and PB10, respectively.
+The updated pin connection is listed below and you can download the code for STM32 with working pin assignment <a href="/data/ST7735_bug/graphicstest_stm32_working.ino">here</a>.
+This way, the code will run without issue.</p>
+<table class="m-table">
+<thead>
+<tr><th>Screen</th>
+<th>STM32</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GND</td>
+<td>GND</td>
+</tr>
+<tr><td>VDD</td>
+<td>3.3V</td>
+</tr>
+<tr><td>SCL</td>
+<td>PA5</td>
+</tr>
+<tr><td>SDA</td>
+<td>PA7</td>
+</tr>
+<tr><td>RST</td>
+<td>PB10</td>
+</tr>
+<tr><td>DC</td>
+<td>PA3</td>
+</tr>
+<tr><td>CS</td>
+<td>PB11</td>
+</tr>
+<tr><td>BLK</td>
+<td>not connected</td>
+</tr>
+</tbody>
+</table>
+<img class="m-image" src="/data/ST7735_bug/working_2.webp" />
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2026-01-17T00:00:00+08:00">Sat 17 January 2026</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-01-17T00:00:00+08:00">Sat 17 January 2026</time></span> Tags: <a href="/tag/st7735.html">ST7735</a>, <a href="/tag/stm32.html">STM32</a>, <a href="/tag/arduino.html">Arduino</a>.</p>
+      </footer>
+    </article>
+<!--     <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="/Blog/">Blog</a></li>
+        <li><a href="/Product/">Product</a></li>
+      </ol>
+      <h3>Tag cloud</h3>
+      <ul class="m-tagcloud">
+        <li class="m-tag-2"><a href="/tag/8-bit.html">8-bit</a></li>
+        <li class="m-tag-2"><a href="/tag/adc.html">ADC</a></li>
+        <li class="m-tag-2"><a href="/tag/ads1115.html">ADS1115</a></li>
+        <li class="m-tag-3"><a href="/tag/arduino.html">Arduino</a></li>
+        <li class="m-tag-5"><a href="/tag/breadboard.html">Breadboard</a></li>
+        <li class="m-tag-2"><a href="/tag/display.html">Display</a></li>
+        <li class="m-tag-2"><a href="/tag/efuse.html">eFuse</a></li>
+        <li class="m-tag-2"><a href="/tag/flash.html">Flash</a></li>
+        <li class="m-tag-2"><a href="/tag/fpga.html">FPGA</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-effect.html">Hall Effect</a></li>
+        <li class="m-tag-2"><a href="/tag/hexadecimal.html">Hexadecimal</a></li>
+        <li class="m-tag-2"><a href="/tag/kicad.html">Kicad</a></li>
+        <li class="m-tag-2"><a href="/tag/overcurrent-protection.html">Overcurrent Protection</a></li>
+        <li class="m-tag-2"><a href="/tag/pmod.html">PMOD</a></li>
+        <li class="m-tag-2"><a href="/tag/power-supply.html">Power Supply</a></li>
+        <li class="m-tag-2"><a href="/tag/raspberry-pi-pico.html">Raspberry Pi Pico</a></li>
+        <li class="m-tag-2"><a href="/tag/register.html">Register</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2040.html">RP2040</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2350.html">RP2350</a></li>
+        <li class="m-tag-2"><a href="/tag/sensor.html">Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/serial-wire-debug.html">Serial Wire Debug</a></li>
+        <li class="m-tag-2"><a href="/tag/simulation.html">Simulation</a></li>
+        <li class="m-tag-2"><a href="/tag/spice.html">SPICE</a></li>
+        <li class="m-tag-2"><a href="/tag/st7735.html">ST7735</a></li>
+        <li class="m-tag-2"><a href="/tag/stm32.html">STM32</a></li>
+        <li class="m-tag-2"><a href="/tag/tmag5170.html">TMAG5170</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+ -->
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>light655. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

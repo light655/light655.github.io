@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register offset module | pico-tmag5170</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">pico-tmag5170</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="pages.html">Example</a></li>
+            <li><a href="classTMAG5170.html">TMAG5170</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="modules.html">Macro</a></li>
+            <li><a href="../../index.html">Home</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          Register offset <span class="m-thin">macro group</span></h1>
+        <nav class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#define-members">Defines</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+<p>Register offset to go into the 1st byte of the SPI frame.</p>
+        <section id="define-members">
+          <h2><a href="#define-members">Defines</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga9f262d60817bb59cb0e836ca7f7c7e23" class="m-doc">DEVICE_CONFIG</a></span>
+            </dt>
+            <dd>Offset of DEVICE_CONFIG register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#gab77ec61933c39fbc7b91473f5fb50752" class="m-doc">SENSOR_CONFIG</a></span>
+            </dt>
+            <dd>Offset of SENSOR_CONFIG register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga02b2a1104c0d366134ff18a120ffc6c2" class="m-doc">SYSTEM_CONFIG</a></span>
+            </dt>
+            <dd>Offset of SYSTEM_CONFIG register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga2b8a2ffe20209d8029bc02190d8d45a9" class="m-doc">ALERT_CONFIG</a></span>
+            </dt>
+            <dd>Offset of ALERT_CONFIG register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga382cac077899c609d7cbadcbf9bf5d6a" class="m-doc">X_THRX_CONFIG</a></span>
+            </dt>
+            <dd>Offset of X_THRX_CONFIG register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga9388937f375ae3eb0f460d592b2cb3d2" class="m-doc">Y_THRX_CONFIG</a></span>
+            </dt>
+            <dd>Offset of Y_THRX_CONFIG register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga9dfa33fdb6d64e6945e99c3a1c59359b" class="m-doc">Z_THRX_CONFIG</a></span>
+            </dt>
+            <dd>Offset of Z_THRX_CONFIG register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga266cae223ffa3639d2d98585bfe9d8e9" class="m-doc">T_THRX_CONFIG</a></span>
+            </dt>
+            <dd>Offset of T_THRX_CONFIG register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga20fef400d52aa55bc0ad93000b74bbd2" class="m-doc">CONV_STATUS</a></span>
+            </dt>
+            <dd>Offset of CONV_STATUS register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga481efae463c29d8c2f74738b3d7f954a" class="m-doc">X_CH_RESULT</a></span>
+            </dt>
+            <dd>Offset of X_CH_RESULT register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga6ec6ea5df36b39ba139c9249de2cdce1" class="m-doc">Y_CH_RESULT</a></span>
+            </dt>
+            <dd>Offset of Y_CH_RESULT register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#gaa5336d957a8882ad1238c75e5ffadfaa" class="m-doc">Z_CH_RESULT</a></span>
+            </dt>
+            <dd>Offset of Z_CH_RESULT register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga0c4ce26096d65a6e42054b9a91665824" class="m-doc">TEMP_RESULT</a></span>
+            </dt>
+            <dd>Offset of TEMP_RESULT register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#gaa39ea3ddd05b261ced7759eafefa82d4" class="m-doc">AFE_STATUS</a></span>
+            </dt>
+            <dd>Offset of AFE_STATUS register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga695e7916a9d828c289b0a9419341cea8" class="m-doc">SYS_STATUS</a></span>
+            </dt>
+            <dd>Offset of SYS_STATUS register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#gaf322551edfa160d8850b798215d47320" class="m-doc">TEST_CONFIG</a></span>
+            </dt>
+            <dd>Offset of TEST_CONFIG register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga47df3968511f0ba2170e90f83fd9d6b3" class="m-doc">OSC_MONITOR</a></span>
+            </dt>
+            <dd>Offset of OSC_MONITOR register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#gab162f0d831dca74aa6435bca92aa8a10" class="m-doc">MAG_GAIN_CONFIG</a></span>
+            </dt>
+            <dd>Offset of MAG_GAIN_CONFIG register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#gac8c0aa0eaa770168bcb38ffd059a6463" class="m-doc">ANGLE_RESULT</a></span>
+            </dt>
+            <dd>Offset of ANGLE_RESULT register.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga829c5f245e31bc1f92bd3f355d381f12" class="m-doc">MAGNITUDE_RESULT</a></span>
+            </dt>
+            <dd>Offset of MAGNITUDE_RESULT register.</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Define documentation</h2>
+          <section class="m-doc-details" id="ga9f262d60817bb59cb0e836ca7f7c7e23"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga9f262d60817bb59cb0e836ca7f7c7e23" class="m-doc-self">DEVICE_CONFIG</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of DEVICE_CONFIG register.</p>
+          </div></section>
+          <section class="m-doc-details" id="gab77ec61933c39fbc7b91473f5fb50752"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#gab77ec61933c39fbc7b91473f5fb50752" class="m-doc-self">SENSOR_CONFIG</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of SENSOR_CONFIG register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga02b2a1104c0d366134ff18a120ffc6c2"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga02b2a1104c0d366134ff18a120ffc6c2" class="m-doc-self">SYSTEM_CONFIG</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of SYSTEM_CONFIG register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga2b8a2ffe20209d8029bc02190d8d45a9"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga2b8a2ffe20209d8029bc02190d8d45a9" class="m-doc-self">ALERT_CONFIG</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of ALERT_CONFIG register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga382cac077899c609d7cbadcbf9bf5d6a"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga382cac077899c609d7cbadcbf9bf5d6a" class="m-doc-self">X_THRX_CONFIG</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of X_THRX_CONFIG register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga9388937f375ae3eb0f460d592b2cb3d2"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga9388937f375ae3eb0f460d592b2cb3d2" class="m-doc-self">Y_THRX_CONFIG</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of Y_THRX_CONFIG register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga9dfa33fdb6d64e6945e99c3a1c59359b"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga9dfa33fdb6d64e6945e99c3a1c59359b" class="m-doc-self">Z_THRX_CONFIG</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of Z_THRX_CONFIG register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga266cae223ffa3639d2d98585bfe9d8e9"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga266cae223ffa3639d2d98585bfe9d8e9" class="m-doc-self">T_THRX_CONFIG</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of T_THRX_CONFIG register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga20fef400d52aa55bc0ad93000b74bbd2"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga20fef400d52aa55bc0ad93000b74bbd2" class="m-doc-self">CONV_STATUS</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of CONV_STATUS register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga481efae463c29d8c2f74738b3d7f954a"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga481efae463c29d8c2f74738b3d7f954a" class="m-doc-self">X_CH_RESULT</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of X_CH_RESULT register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga6ec6ea5df36b39ba139c9249de2cdce1"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga6ec6ea5df36b39ba139c9249de2cdce1" class="m-doc-self">Y_CH_RESULT</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of Y_CH_RESULT register.</p>
+          </div></section>
+          <section class="m-doc-details" id="gaa5336d957a8882ad1238c75e5ffadfaa"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#gaa5336d957a8882ad1238c75e5ffadfaa" class="m-doc-self">Z_CH_RESULT</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of Z_CH_RESULT register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga0c4ce26096d65a6e42054b9a91665824"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga0c4ce26096d65a6e42054b9a91665824" class="m-doc-self">TEMP_RESULT</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of TEMP_RESULT register.</p>
+          </div></section>
+          <section class="m-doc-details" id="gaa39ea3ddd05b261ced7759eafefa82d4"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#gaa39ea3ddd05b261ced7759eafefa82d4" class="m-doc-self">AFE_STATUS</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of AFE_STATUS register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga695e7916a9d828c289b0a9419341cea8"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga695e7916a9d828c289b0a9419341cea8" class="m-doc-self">SYS_STATUS</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of SYS_STATUS register.</p>
+          </div></section>
+          <section class="m-doc-details" id="gaf322551edfa160d8850b798215d47320"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#gaf322551edfa160d8850b798215d47320" class="m-doc-self">TEST_CONFIG</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of TEST_CONFIG register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga47df3968511f0ba2170e90f83fd9d6b3"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga47df3968511f0ba2170e90f83fd9d6b3" class="m-doc-self">OSC_MONITOR</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of OSC_MONITOR register.</p>
+          </div></section>
+          <section class="m-doc-details" id="gab162f0d831dca74aa6435bca92aa8a10"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#gab162f0d831dca74aa6435bca92aa8a10" class="m-doc-self">MAG_GAIN_CONFIG</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of MAG_GAIN_CONFIG register.</p>
+          </div></section>
+          <section class="m-doc-details" id="gac8c0aa0eaa770168bcb38ffd059a6463"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#gac8c0aa0eaa770168bcb38ffd059a6463" class="m-doc-self">ANGLE_RESULT</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of ANGLE_RESULT register.</p>
+          </div></section>
+          <section class="m-doc-details" id="ga829c5f245e31bc1f92bd3f355d381f12"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">#define <a href="#ga829c5f245e31bc1f92bd3f355d381f12" class="m-doc-self">MAGNITUDE_RESULT</a></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+            </h3>
+            <p>Offset of MAGNITUDE_RESULT register.</p>
+          </div></section>
+        </section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v2.js"></script>
+<script src="searchdata-v2.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>pico-tmag5170. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.8 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <title>SPICE simulation with Kicad | light655</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="/static/m-dark.css" />
+  <link rel="canonical" href="/Blog/kicad-spice.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#cb4b16" />
+  <meta property="og:site_name" content="light655" />
+  <meta property="og:title" content="SPICE simulation with Kicad" />
+  <meta name="twitter:title" content="SPICE simulation with Kicad" />
+  <meta property="og:url" content="/Blog/kicad-spice.html" />
+  <meta property="og:description" content="Kicad is an open-source electronics design suite, mainly used in PCB design. It also has built-in Ngspice simulator to simulator circuit behaviours. In this airticle, we will go through the basic setup of SPICE simulation in Kicad and how to find extra SPICE models." />
+  <meta name="twitter:description" content="Kicad is an open-source electronics design suite, mainly used in PCB design. It also has built-in Ngspice simulator to simulator circuit behaviours. In this airticle, we will go through the basic setup of SPICE simulation in Kicad and how to find extra SPICE models." />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="/" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">light655</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="/blab.html">Blab</a></li>
+            <li><a href="/Blog/">Blog</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="/docs/">Documentation</a></li>
+            <li><a href="/Product/">Product</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="/Blog/kicad-spice.html" rel="bookmark" title="Permalink to SPICE simulation with Kicad">
+          <time class="m-date" datetime="2025-01-05T00:00:00+08:00">
+            Jan <span class="m-date-day">05</span> 2025
+          </time>
+          SPICE simulation with Kicad
+        </a></h1>
+        <p>Kicad is an open-source electronics design suite, mainly used in PCB design.
+        It also has built-in Ngspice simulator to simulator circuit behaviours.
+        In this airticle, we will go through the basic setup of SPICE simulation in Kicad and how to find extra SPICE models.</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<img alt="SPICE simulation in Kicad." class="m-image" src="/data/kicad-spice/kicad-spice-cover.png" />
+<section id="schematic">
+<h2>Schematic</h2>
+<p>Build up your circuit schematic as usual, we will configure the simulation model later.
+If you need SPICE specific components such as voltage/current source, search &quot;spice&quot; in the symbol selector.
+In this example, let's build a simple common source amplifier with the 2N7000 N-channel MOSFET.</p>
+<img alt="Common source amplifier circuit schematic." class="m-image" src="/data/kicad-spice/kicad-spice-cs.png" />
+</section>
+<section id="voltage-sources">
+<h2>Voltage sources</h2>
+<p>For this amplifier, we need to add voltage sources for the power supply and the input signal.
+First, search &quot;spice&quot; in the symbol selector to find the voltage sources.</p>
+<img alt="SPICE voltage sources in Kicad." class="m-image" src="/data/kicad-spice/kicad-spice-vsource.png" />
+<p>There are numerous options for voltage source.
+For the power supply we'll use &quot;VDC&quot; and for the input signal we'll use &quot;VSIN&quot;.
+To configure the voltage, just put the voltage values in the componenet value field.
+The sinusoidal voltage can be configured by following the parameters on the component.</p>
+</section>
+<section id="component-models">
+<h2>Component models</h2>
+<p>Unforturnately, Kicad doesn't have built-in component models for semiconductor devices.
+You can either configure the components yourself or find the component models online.
+Some manufacturers will have the SPICE model for their transistors and opamps available for download.</p>
+<p>However, there is an easier way to find component models.
+There is a <a href="https://github.com/kicad-spice-library/KiCad-Spice-Library">repository on Github</a> that collected lots of SPICE models.
+Clone the repository and run <code class="m-code">Scripts/check_supported.py</code> with python.
+You can search for the component you want with this script.</p>
+<img alt="Search for compenent in the github repository with Scripts/check_supported.py" class="m-image" src="/data/kicad-spice/kicad-spice-search.png" />
+<p>Typically, the script will return multiple results.
+Pick one and go to the file.
+With your text editor, copy the corresponding model into another file and save it under the Kicad project.</p>
+<img class="m-image" src="/data/kicad-spice/kicad-spice-find.png" />
+<img class="m-image" src="/data/kicad-spice/kicad-spice-copy.png" />
+<p>Note that the different search results may have slightly different component behaviour.
+Also, not all models work with the Ngspice simulator.</p>
+<p>On the pin assignment page, we need to assign the pins on the model to the pins on the symbol.
+On SPICE models, the pins of a MOSFET is in the order of D-G-S, and it's E-B-C for BJT.</p>
+<img class="m-image" src="/data/kicad-spice/kicad-spice-pin.png" />
+<p>Click OK and save the changes, and we have a working schematic for simulation.</p>
+</section>
+<section id="simulation">
+<h2>Simulation!</h2>
+<p>Open the simulator from the drop down menu.</p>
+<img class="m-image" src="/data/kicad-spice/kicad-spice-simulator.png" />
+<p>In the simulator, click new simulation tab to add a new simulation.
+First, let's run <em>.op</em> to find the DC operating point of the amplifier.
+Click OK and then click run, and the simulation result will show on the schematic.</p>
+<img class="m-image" src="/data/kicad-spice/kicad-spice-op.png" />
+<img class="m-image" src="/data/kicad-spice/kicad-spice-opr.png" />
+<aside class="m-note m-danger">
+<h3>Warning:</h3>
+<p>Voltages and currents may still be printed onto the schematic even the <em>.op</em> simulation failed.
+Please see <a href="https://forum.kicad.info/t/ngspice-op-dc-analysis-gotcha-with-unconnected-caps/52032/2">this post</a> on the Kicad forum for more information.</p>
+</aside>
+<p>Next, let's run <em>.tran</em> to simulate the time domain behaviour of this circuit.</p>
+<img class="m-image" src="/data/kicad-spice/kicad-spice-tran.png" />
+<img class="m-image" src="/data/kicad-spice/kicad-spice-tran-1.png" />
+<p>Set appropiate time step and simulation length for your circuit.
+Click OK and then click run, and the simulation result will show in the simulator.</p>
+<img class="m-image" src="/data/kicad-spice/kicad-spice-tran-2.png" />
+<p>Remember to check the &quot;plot&quot; checkbox so that he signal will show on the plot.</p>
+<p>There are several other kinds of simulation that Kicad can do, such as <em>.ac</em> to find the Bode plot and <em>.dc</em> to do DC sweep.
+Just play around and find the best simulation option for youself!</p>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2025-01-05T00:00:00+08:00">Sun 05 January 2025</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-01-12T00:00:00+08:00">Mon 12 January 2026</time></span> Tags: <a href="/tag/kicad.html">Kicad</a>, <a href="/tag/spice.html">SPICE</a>, <a href="/tag/simulation.html">Simulation</a>.</p>
+      </footer>
+    </article>
+<!--     <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="/Blog/">Blog</a></li>
+        <li><a href="/Product/">Product</a></li>
+      </ol>
+      <h3>Tag cloud</h3>
+      <ul class="m-tagcloud">
+        <li class="m-tag-2"><a href="/tag/8-bit.html">8-bit</a></li>
+        <li class="m-tag-2"><a href="/tag/adc.html">ADC</a></li>
+        <li class="m-tag-2"><a href="/tag/ads1115.html">ADS1115</a></li>
+        <li class="m-tag-3"><a href="/tag/arduino.html">Arduino</a></li>
+        <li class="m-tag-5"><a href="/tag/breadboard.html">Breadboard</a></li>
+        <li class="m-tag-2"><a href="/tag/display.html">Display</a></li>
+        <li class="m-tag-2"><a href="/tag/efuse.html">eFuse</a></li>
+        <li class="m-tag-2"><a href="/tag/flash.html">Flash</a></li>
+        <li class="m-tag-2"><a href="/tag/fpga.html">FPGA</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-effect.html">Hall Effect</a></li>
+        <li class="m-tag-2"><a href="/tag/hexadecimal.html">Hexadecimal</a></li>
+        <li class="m-tag-2"><a href="/tag/kicad.html">Kicad</a></li>
+        <li class="m-tag-2"><a href="/tag/overcurrent-protection.html">Overcurrent Protection</a></li>
+        <li class="m-tag-2"><a href="/tag/pmod.html">PMOD</a></li>
+        <li class="m-tag-2"><a href="/tag/power-supply.html">Power Supply</a></li>
+        <li class="m-tag-2"><a href="/tag/raspberry-pi-pico.html">Raspberry Pi Pico</a></li>
+        <li class="m-tag-2"><a href="/tag/register.html">Register</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2040.html">RP2040</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2350.html">RP2350</a></li>
+        <li class="m-tag-2"><a href="/tag/sensor.html">Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/serial-wire-debug.html">Serial Wire Debug</a></li>
+        <li class="m-tag-2"><a href="/tag/simulation.html">Simulation</a></li>
+        <li class="m-tag-2"><a href="/tag/spice.html">SPICE</a></li>
+        <li class="m-tag-2"><a href="/tag/st7735.html">ST7735</a></li>
+        <li class="m-tag-2"><a href="/tag/stm32.html">STM32</a></li>
+        <li class="m-tag-2"><a href="/tag/tmag5170.html">TMAG5170</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+ -->
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>light655. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

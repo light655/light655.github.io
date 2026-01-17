@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TMAG5170 class | pico-tmag5170</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">pico-tmag5170</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="pages.html">Example</a></li>
+            <li><a href="classTMAG5170.html" id="m-navbar-current">TMAG5170</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="modules.html">Macro</a></li>
+            <li><a href="../../index.html">Home</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          TMAG5170 <span class="m-thin">class</span>
+          <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="TMAG5170_8hpp.html">&lt;/home/light/Projects/pico-tmag5170/src/TMAG5170.hpp&gt;</a></div>
+        </h1>
+        <p>Class for <a href="classTMAG5170.html" class="m-doc">TMAG5170</a>.</p>
+        <nav class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
+                <li><a href="#pub-methods">Public functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <section id="typeless-methods">
+          <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
+          <dl class="m-doc">
+            <dt id="a71ea1fe3900934faa8f9802be3a14cf2">
+              <span class="m-doc-wrap-bumper"><a href="#a71ea1fe3900934faa8f9802be3a14cf2" class="m-doc-self">TMAG5170</a>(</span><span class="m-doc-wrap">void)</span>
+            </dt>
+            <dd>Construct a new <a href="#a71ea1fe3900934faa8f9802be3a14cf2" class="m-doc">TMAG5170::<wbr />TMAG5170</a> object.</dd>
+          </dl>
+        </section>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a52122ed8d5097b81961cf5bd4c40bef3" class="m-doc">attachSPI</a>(</span><span class="m-doc-wrap">spi_inst_t* spi,
+              uint spi_sck_pin,
+              uint spi_mosi_pin,
+              uint spi_miso_pin,
+              uint spi_cs_pin,
+              uint buadrate)</span>
+            </dt>
+            <dd>Attach and initialise SPI on the Pico for <a href="classTMAG5170.html" class="m-doc">TMAG5170</a>.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aa2f9f7daa30cba2b38538aa9404bb10d" class="m-doc">generateCRC</a>(</span><span class="m-doc-wrap">uint32_t data) -&gt; uint32_t</span>
+            </dt>
+            <dd>Generate CRC for SPI communication.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a8b432427c354a7083eaca390388f064e" class="m-doc">checkCRC</a>(</span><span class="m-doc-wrap">uint32_t received_frame) -&gt; int</span>
+            </dt>
+            <dd>Check the CRC of the received frame.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a96b30d0b574c87c7755fb926a3cf7eff" class="m-doc">exchangeFrame</a>(</span><span class="m-doc-wrap">uint32_t frame) -&gt; uint32_t</span>
+            </dt>
+            <dd>Exchange an SPI frame with <a href="classTMAG5170.html" class="m-doc">TMAG5170</a>.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#adfd2b2fd7e7df5b048bfffae45aae3cd" class="m-doc">readRegister</a>(</span><span class="m-doc-wrap">uint8_t offset,
+              bool start_conversion_spi = false) -&gt; uint16_t</span>
+            </dt>
+            <dd>Read the content of the register at the offset in the argument. This function attempts to read the register until the CRC is correct.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a2ff42df71b199871235109ff8245b21c" class="m-doc">writeRegister</a>(</span><span class="m-doc-wrap">uint8_t offset,
+              bool start_conversion_spi = false)</span>
+            </dt>
+            <dd>Write the register content stored in the array into the register at the offset provided in the argument. This function attempts to write the register until the returning CRC is correct.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a4f5e90e551aa3d3b9c75c6e06c8d2db7" class="m-doc">readERRORSTAT</a>(</span><span class="m-doc-wrap">void) -&gt; uint16_t</span>
+            </dt>
+            <dd>Read the ERROR_STAT bits of the previously received frame.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#af1d4e1602a8aa12b6a2fe8cab6ec8a8b" class="m-doc">init</a>(</span><span class="m-doc-wrap">void) -&gt; <a href="TMAG5170_8hpp.html#a4405ce693a977fe443ef70919ab26096" class="m-doc">TMAG5170_<wbr />version</a></span>
+            </dt>
+            <dd>Initialise <a href="classTMAG5170.html" class="m-doc">TMAG5170</a>, clear the CFG_REST bit and reads the version of the device.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a9ae0366309119bfeb6049833bdabee80" class="m-doc">setOperatingMode</a>(</span><span class="m-doc-wrap">uint16_t operating_mode)</span>
+            </dt>
+            <dd>Set the operating mode of the <a href="classTMAG5170.html" class="m-doc">TMAG5170</a>.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a26a40cca4eab7b2d6f3e367c4f411b10" class="m-doc">setConversionAverage</a>(</span><span class="m-doc-wrap">uint16_t conversion_average)</span>
+            </dt>
+            <dd>Set the number of averages to take for each conversion.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#aef67a3b1e664d96a20b6771744ea1870" class="m-doc">enableAngleCalculation</a>(</span><span class="m-doc-wrap">uint16_t angle_calculation_config)</span>
+            </dt>
+            <dd>Enable angle calculation.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#ac16d72f0840ba1e6e988107d116a2fc1" class="m-doc">enableMagneticChannel</a>(</span><span class="m-doc-wrap">bool x_enable,
+              bool y_enable,
+              bool z_enable)</span>
+            </dt>
+            <dd>Enable conversion on a selection of the three magnetic axes.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#aa0c817ee30ea57bea77069d86598f872" class="m-doc">setMagneticRange</a>(</span><span class="m-doc-wrap">uint16_t x_range,
+              uint16_t y_range,
+              uint16_t z_range)</span>
+            </dt>
+            <dd>Set magnetic field measurement range on each axis.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a7d84ecc067c9315d3d3da6528dfc0f4d" class="m-doc">enableAlertOutput</a>(</span><span class="m-doc-wrap">bool enable)</span>
+            </dt>
+            <dd>Enable ALERT output to notify the microcontroller when the conversion is finished.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#acc75d969d850e284cd3a3a7fb9b422a0" class="m-doc">readXRaw</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false) -&gt; int16_t</span>
+            </dt>
+            <dd>Read the raw 16-bit conversion result of the magnetic field on the X axis.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a5f048347d9a0e9e2d17dfeec917709d9" class="m-doc">readYRaw</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false) -&gt; int16_t</span>
+            </dt>
+            <dd>Read the raw 16-bit conversion result of the magnetic field on the Y axis.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a90baf6d494e4522e23916609f12d0f94" class="m-doc">readZRaw</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false) -&gt; int16_t</span>
+            </dt>
+            <dd>Read the raw 16-bit conversion result of the magnetic field on the Z axis.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a12587dfe34cd71b7f936cd849773a4ad" class="m-doc">readX</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false) -&gt; float</span>
+            </dt>
+            <dd>Read the conversion result in mT on the X axis.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aab23868c7dc6258c418b81075aec5b83" class="m-doc">readY</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false) -&gt; float</span>
+            </dt>
+            <dd>Read the conversion result in mT on the Y axis.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a839a3b9cf21855b9583c6491c2b4ff4d" class="m-doc">readZ</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false) -&gt; float</span>
+            </dt>
+            <dd>Read the conversion result in mT on the Z axis.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a75183a8779cd2d7bad720878b25133b7" class="m-doc">readAngleRaw</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false) -&gt; int16_t</span>
+            </dt>
+            <dd>Read the raw 16-bit data of the angle of the magnetic field.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#afa6a81bdbeb661ec87d12667d8518856" class="m-doc">readAngle</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false) -&gt; float</span>
+            </dt>
+            <dd>Read the angle of the magnetic field in degree.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a5cdabe3cad2c057fd965ba9f3e15a975" class="m-doc">readMagnitudeRaw</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false) -&gt; int16_t</span>
+            </dt>
+            <dd>Read the raw 16-bit magnitude of the magnetic field.</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a52122ed8d5097b81961cf5bd4c40bef3"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a52122ed8d5097b81961cf5bd4c40bef3" class="m-doc-self">attachSPI</a>(</span><span class="m-doc-wrap">spi_inst_t* spi,
+              uint spi_sck_pin,
+              uint spi_mosi_pin,
+              uint spi_miso_pin,
+              uint spi_cs_pin,
+              uint buadrate)</span></span>
+            </h3>
+            <p>Attach and initialise SPI on the Pico for <a href="classTMAG5170.html" class="m-doc">TMAG5170</a>.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">spi</td>
+                  <td>SPI instance specifier, either spi0 or spi1.</td>
+                </tr>
+                <tr>
+                  <td>spi_sck_pin</td>
+                  <td>SPI SCK GPIO pin number.</td>
+                </tr>
+                <tr>
+                  <td>spi_mosi_pin</td>
+                  <td>SPI MOSI GPIO pin number.</td>
+                </tr>
+                <tr>
+                  <td>spi_miso_pin</td>
+                  <td>SPI MISO GPIO pin number.</td>
+                </tr>
+                <tr>
+                  <td>spi_cs_pin</td>
+                  <td>SPI CS GPIO pin number.</td>
+                </tr>
+                <tr>
+                  <td>buadrate</td>
+                  <td>Baudrate in Hz. The <a href="classTMAG5170.html" class="m-doc">TMAG5170</a> supports up to 10 MHz SPI baudrate.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="aa2f9f7daa30cba2b38538aa9404bb10d"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">uint32_t TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa2f9f7daa30cba2b38538aa9404bb10d" class="m-doc-self">generateCRC</a>(</span><span class="m-doc-wrap">uint32_t data)</span></span>
+            </h3>
+            <p>Generate CRC for SPI communication.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">data</td>
+                  <td>32-bit data to generate CRC for. The last four bits should be all 0&#x27;s.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>uint32_t containing the four CRC bits.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a8b432427c354a7083eaca390388f064e"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">int TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a8b432427c354a7083eaca390388f064e" class="m-doc-self">checkCRC</a>(</span><span class="m-doc-wrap">uint32_t received_frame)</span></span>
+            </h3>
+            <p>Check the CRC of the received frame.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">received_frame</td>
+                  <td>32-bit data of the received frame.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>Return nonzero value if CRC is incorrect.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a96b30d0b574c87c7755fb926a3cf7eff"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">uint32_t TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a96b30d0b574c87c7755fb926a3cf7eff" class="m-doc-self">exchangeFrame</a>(</span><span class="m-doc-wrap">uint32_t frame)</span></span>
+            </h3>
+            <p>Exchange an SPI frame with <a href="classTMAG5170.html" class="m-doc">TMAG5170</a>.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">frame</td>
+                  <td>32-bit data of the frame to send. CRC needs to be included in this frame.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>uint32_t containing the received frame. CRC is not checked for the received frame.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="adfd2b2fd7e7df5b048bfffae45aae3cd"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">uint16_t TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#adfd2b2fd7e7df5b048bfffae45aae3cd" class="m-doc-self">readRegister</a>(</span><span class="m-doc-wrap">uint8_t offset,
+              bool start_conversion_spi = false)</span></span>
+            </h3>
+            <p>Read the content of the register at the offset in the argument. This function attempts to read the register until the CRC is correct.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">offset</td>
+                  <td>Offset of the register to read.</td>
+                </tr>
+                <tr>
+                  <td>start_conversion_spi</td>
+                  <td>Set true to initiate conversion when the CS line goes high after the register read.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>Register content read from the <a href="classTMAG5170.html" class="m-doc">TMAG5170</a>.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a2ff42df71b199871235109ff8245b21c"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2ff42df71b199871235109ff8245b21c" class="m-doc-self">writeRegister</a>(</span><span class="m-doc-wrap">uint8_t offset,
+              bool start_conversion_spi = false)</span></span>
+            </h3>
+            <p>Write the register content stored in the array into the register at the offset provided in the argument. This function attempts to write the register until the returning CRC is correct.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">offset</td>
+                  <td>Offset of the register to write.</td>
+                </tr>
+                <tr>
+                  <td>start_conversion_spi</td>
+                  <td>Set true to initiate conversion when the CS line goes high after the register read.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a4f5e90e551aa3d3b9c75c6e06c8d2db7"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">uint16_t TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4f5e90e551aa3d3b9c75c6e06c8d2db7" class="m-doc-self">readERRORSTAT</a>(</span><span class="m-doc-wrap">void)</span></span>
+            </h3>
+            <p>Read the ERROR_STAT bits of the previously received frame.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>uint16_t containing the ERROR_STAT bits.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="af1d4e1602a8aa12b6a2fe8cab6ec8a8b"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper"><a href="TMAG5170_8hpp.html#a4405ce693a977fe443ef70919ab26096" class="m-doc">TMAG5170_<wbr />version</a> TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af1d4e1602a8aa12b6a2fe8cab6ec8a8b" class="m-doc-self">init</a>(</span><span class="m-doc-wrap">void)</span></span>
+            </h3>
+            <p>Initialise <a href="classTMAG5170.html" class="m-doc">TMAG5170</a>, clear the CFG_REST bit and reads the version of the device.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>Version of the device, A1 or A2.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a9ae0366309119bfeb6049833bdabee80"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9ae0366309119bfeb6049833bdabee80" class="m-doc-self">setOperatingMode</a>(</span><span class="m-doc-wrap">uint16_t operating_mode)</span></span>
+            </h3>
+            <p>Set the operating mode of the <a href="classTMAG5170.html" class="m-doc">TMAG5170</a>.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">operating_mode</td>
+                  <td>Use <a href="group__OPERATING__MODE.html" class="m-doc">macros</a> to specify the operating mode.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a26a40cca4eab7b2d6f3e367c4f411b10"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a26a40cca4eab7b2d6f3e367c4f411b10" class="m-doc-self">setConversionAverage</a>(</span><span class="m-doc-wrap">uint16_t conversion_average)</span></span>
+            </h3>
+            <p>Set the number of averages to take for each conversion.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">conversion_average</td>
+                  <td>Use <a href="group__CONV__AVG.html" class="m-doc">macros</a> to specify the number of averages.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="aef67a3b1e664d96a20b6771744ea1870"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aef67a3b1e664d96a20b6771744ea1870" class="m-doc-self">enableAngleCalculation</a>(</span><span class="m-doc-wrap">uint16_t angle_calculation_config)</span></span>
+            </h3>
+            <p>Enable angle calculation.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">angle_calculation_config</td>
+                  <td>Use <a href="group__ANGLE__AXES.html" class="m-doc">macros</a> to specify the two axes used for angle calculation.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="ac16d72f0840ba1e6e988107d116a2fc1"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac16d72f0840ba1e6e988107d116a2fc1" class="m-doc-self">enableMagneticChannel</a>(</span><span class="m-doc-wrap">bool x_enable,
+              bool y_enable,
+              bool z_enable)</span></span>
+            </h3>
+            <p>Enable conversion on a selection of the three magnetic axes.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">x_enable</td>
+                  <td>Enable X axis.</td>
+                </tr>
+                <tr>
+                  <td>y_enable</td>
+                  <td>Enable Y axis.</td>
+                </tr>
+                <tr>
+                  <td>z_enable</td>
+                  <td>Enable Z axis.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="aa0c817ee30ea57bea77069d86598f872"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa0c817ee30ea57bea77069d86598f872" class="m-doc-self">setMagneticRange</a>(</span><span class="m-doc-wrap">uint16_t x_range,
+              uint16_t y_range,
+              uint16_t z_range)</span></span>
+            </h3>
+            <p>Set magnetic field measurement range on each axis.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">x_range</td>
+                  <td>Use <a href="group__MAG__RANGE.html" class="m-doc">macros</a> to specify the range of the X axis.</td>
+                </tr>
+                <tr>
+                  <td>y_range</td>
+                  <td>Use <a href="group__MAG__RANGE.html" class="m-doc">macros</a> to specify the range of the Y axis.</td>
+                </tr>
+                <tr>
+                  <td>z_range</td>
+                  <td>Use <a href="group__MAG__RANGE.html" class="m-doc">macros</a> to specify the range of the Z axis.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a7d84ecc067c9315d3d3da6528dfc0f4d"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a7d84ecc067c9315d3d3da6528dfc0f4d" class="m-doc-self">enableAlertOutput</a>(</span><span class="m-doc-wrap">bool enable)</span></span>
+            </h3>
+            <p>Enable ALERT output to notify the microcontroller when the conversion is finished.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">enable</td>
+                  <td>Set true to enable ALERT output.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="acc75d969d850e284cd3a3a7fb9b422a0"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">int16_t TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#acc75d969d850e284cd3a3a7fb9b422a0" class="m-doc-self">readXRaw</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false)</span></span>
+            </h3>
+            <p>Read the raw 16-bit conversion result of the magnetic field on the X axis.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">start_conversion_spi</td>
+                  <td>Set true to initiate conversion when the CS line goes high after the register read.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The raw 16-bit value in the X_CH_RESULT register.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a5f048347d9a0e9e2d17dfeec917709d9"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">int16_t TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a5f048347d9a0e9e2d17dfeec917709d9" class="m-doc-self">readYRaw</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false)</span></span>
+            </h3>
+            <p>Read the raw 16-bit conversion result of the magnetic field on the Y axis.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">start_conversion_spi</td>
+                  <td>Set true to initiate conversion when the CS line goes high after the register read.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The raw 16-bit value in the Y_CH_RESULT register.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a90baf6d494e4522e23916609f12d0f94"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">int16_t TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a90baf6d494e4522e23916609f12d0f94" class="m-doc-self">readZRaw</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false)</span></span>
+            </h3>
+            <p>Read the raw 16-bit conversion result of the magnetic field on the Z axis.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">start_conversion_spi</td>
+                  <td>Set true to initiate conversion when the CS line goes high after the register read.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The raw 16-bit value in the Z_CH_RESULT register.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a12587dfe34cd71b7f936cd849773a4ad"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">float TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a12587dfe34cd71b7f936cd849773a4ad" class="m-doc-self">readX</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false)</span></span>
+            </h3>
+            <p>Read the conversion result in mT on the X axis.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">start_conversion_spi</td>
+                  <td>Set true to initiate conversion when the CS line goes high after the register read.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The magnetic field on the X axis in mT.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="aab23868c7dc6258c418b81075aec5b83"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">float TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aab23868c7dc6258c418b81075aec5b83" class="m-doc-self">readY</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false)</span></span>
+            </h3>
+            <p>Read the conversion result in mT on the Y axis.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">start_conversion_spi</td>
+                  <td>Set true to initiate conversion when the CS line goes high after the register read.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The magnetic field on the Y axis in mT.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a839a3b9cf21855b9583c6491c2b4ff4d"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">float TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a839a3b9cf21855b9583c6491c2b4ff4d" class="m-doc-self">readZ</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false)</span></span>
+            </h3>
+            <p>Read the conversion result in mT on the Z axis.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">start_conversion_spi</td>
+                  <td>Set true to initiate conversion when the CS line goes high after the register read.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The magnetic field on the Z axis in mT.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a75183a8779cd2d7bad720878b25133b7"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">int16_t TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a75183a8779cd2d7bad720878b25133b7" class="m-doc-self">readAngleRaw</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false)</span></span>
+            </h3>
+            <p>Read the raw 16-bit data of the angle of the magnetic field.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">start_conversion_spi</td>
+                  <td>Set true to initiate conversion when the CS line goes high after the register read.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The raw 16-bit data in the ANGLE_RESULT register.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="afa6a81bdbeb661ec87d12667d8518856"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">float TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afa6a81bdbeb661ec87d12667d8518856" class="m-doc-self">readAngle</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false)</span></span>
+            </h3>
+            <p>Read the angle of the magnetic field in degree.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">start_conversion_spi</td>
+                  <td>Set true to initiate conversion when the CS line goes high after the register read.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The angle of the magnetic field in degree in float.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a5cdabe3cad2c057fd965ba9f3e15a975"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">int16_t TMAG5170::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a5cdabe3cad2c057fd965ba9f3e15a975" class="m-doc-self">readMagnitudeRaw</a>(</span><span class="m-doc-wrap">bool start_conversion_spi = false)</span></span>
+            </h3>
+            <p>Read the raw 16-bit magnitude of the magnetic field.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">start_conversion_spi</td>
+                  <td>Set true to initiate conversion when the CS line goes high after the register read.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The raw 16-bit data in the MAGNITUDE_RESULT register.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+        </section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v2.js"></script>
+<script src="searchdata-v2.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>pico-tmag5170. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.8 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

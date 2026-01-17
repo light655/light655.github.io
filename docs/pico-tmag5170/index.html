@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>pico-tmag5170</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">pico-tmag5170</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="pages.html">Example</a></li>
+            <li><a href="classTMAG5170.html">TMAG5170</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="modules.html">Macro</a></li>
+            <li><a href="../../index.html">Home</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          pico-tmag5170
+        </h1>
+<p><a name="md__2home_2light_2Projects_2pico-tmag5170_2README"></a>A <a href="classTMAG5170.html" class="m-doc">TMAG5170</a> Hall-effect sensor library for Raspberry Pi Pico SDK.</p><section id="autotoc_md1"><h2><a href="#autotoc_md1">Intro</a></h2><p><a href="classTMAG5170.html" class="m-doc">TMAG5170</a> is a high-precision 3D Hall-effect sensor IC designed by Texas Instruments. It measures the magnetic field in all 3 axes, with a sampling rate of up to 10 kSPS. Communication with <a href="classTMAG5170.html" class="m-doc">TMAG5170</a> is based on SPI, with maximum frequency of 10 MHz and cyclic redundancy check. There are two versions, A1 and A2, of <a href="classTMAG5170.html" class="m-doc">TMAG5170</a> with different measuring ranges.</p><p>If you are using Arduino, there is an <a href="https://github.com/light655/arduino-tmag5170/">Arduino version of this library</a>.</p></section><section id="autotoc_md2"><h2><a href="#autotoc_md2">Usage</a></h2><ul><li>Copy the two files in src (<a href="TMAG5170_8cpp.html" class="m-doc">TMAG5170.cpp</a>, <a href="TMAG5170_8hpp.html" class="m-doc">TMAG5170.hpp</a>) into your pico project.</li><li><p>Add the <a href="classTMAG5170.html" class="m-doc">TMAG5170</a> library to your CMakeLists.txt</p><pre class="m-code"><span class="nb">add_library</span><span class="p">(</span><span class="s">TMAG5170</span><span class="w"> </span><span class="s">TMAG5170.cpp</span><span class="p">)</span>
+
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">TMAG5170</span>
+<span class="w">    </span><span class="s">pico_stdlib</span>
+<span class="w">    </span><span class="s">hardware_spi</span>
+<span class="p">)</span></pre></li><li><p>Link it to your project in your CMakeLists.txt</p><pre class="m-code"><span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">your_project_name</span>
+<span class="w">    </span><span class="s">TMAG5170</span>
+<span class="w">    </span><span class="c"># the following two libraries will be needed too.</span>
+<span class="w">    </span><span class="s">pico_stdlib</span>
+<span class="w">    </span><span class="s">hardware_spi</span>
+<span class="p">)</span></pre></li><li>Remember to include the header file in your code. <code class="m-code"><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;TMAG5170.h&quot;</span></code></li></ul></section><section id="autotoc_md3"><h2><a href="#autotoc_md3">Notes</a></h2><ul><li>This library uses version 2.0.0+ Pico-SDK</li><li>The SPI functions in this library is written in a blocking fashion in order to implement CRC with every transaction with the <a href="classTMAG5170.html" class="m-doc">TMAG5170</a>.</li><li>To operate the <a href="classTMAG5170.html" class="m-doc">TMAG5170</a> at maximum speed, a SPI clock frequency of 2 MHz or more is required.</li></ul></section><section id="autotoc_md4"><h2><a href="#autotoc_md4">Examples</a></h2><section id="autotoc_md5"><h3><a href="#autotoc_md5">Continuous conversion</a></h3><p>In this example, the device is configured to measure the magnetic field on all 3 axes. The output of the device will be the average of 32 conversion results, giving a sampling rate of 312.5 SPS. The nALERT output of the device is configured to assert a negative pulse when the conversion result is ready. This signal is used to generate an interrupt on the Pico. The Pico will read the conversion result and print it over UART.</p><p>Note that the data in the example is printed to UART. To print it over USB, swap the 0 and 1 in lines 36 and 37 in examples/continuous_measuring/CMakeLists.txt</p></section><section id="autotoc_md6"><h3><a href="#autotoc_md6">Measure and send to Python client</a></h3><p>In this example, the device is configured to measure the magnetic field on all 3 axes at maximum speed. The measured data is sent as bytes through USB to a Python script. The device will perform a number of conversions(set in the Python program&#x27;s input) at 10000 SPS.</p><p>Note that stdio has to be over USB for this example to work as intended. The pyserial module is required for the Python script.</p></section></section><section id="autotoc_md7"><h2><a href="#autotoc_md7">References</a></h2><ul><li><a href="https://www.ti.com/lit/ds/symlink/tmag5170.pdf?ts=1724587283732&amp;ref_url=https%253A%252F%252Fwww.ti.com%252Fproduct%252FTMAG5170">TMAG5170 datasheet</a></li><li><a href="https://light655.github.io/2024/11/20/TMAG5170/">My blog on more details about the TMAG5170</a></li></ul></section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v2.js"></script>
+<script src="searchdata-v2.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>pico-tmag5170. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.8 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

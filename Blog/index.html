@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blog | light655</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="/static/m-dark.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#cb4b16" />
+  <meta property="og:site_name" content="light655" />
+  <meta property="og:title" content="Blog" />
+  <meta name="twitter:title" content="Blog" />
+  <meta property="og:url" content="/Blog/" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="website" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="/" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">light655</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="/blab.html">Blab</a></li>
+            <li><a href="/Blog/">Blog</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="/docs/">Documentation</a></li>
+            <li><a href="/Product/">Product</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <div class="m-col-m-10">
+      <!-- <div class="m-info m-note">
+        Showing only posts in <em>Blog</em>. <a href="/">Show all posts.</a>
+      </div> -->
+      <h1>Blog</h1><br>
+      <article>
+        <header>
+          <h1><a href="/Blog/ST7735_bug.html" rel="bookmark" title="Permalink to STM32, Arduino environment, ST7735 screen. Bugs and workarounds.">
+            <time class="m-date" datetime="2026-01-17T00:00:00+08:00">
+              Jan <span class="m-date-day">17</span> 2026
+            </time>
+            STM32, Arduino environment, ST7735 screen. Bugs and workarounds.
+          </a></h1>
+              <p>I was working with the ST7735 screen in a project at <a href="https://nthuee.org/index.html">NTHUEE 822 Maker Space</a>.
+          We were controlling the screen with an STM32F103C8T6 Blue Pill and <a href="https://github.com/adafruit/Adafruit-ST7735-Library">Adafruit's ST7735 &amp; ST7789 library</a>.
+          And we ran into a very interesting bug, which was caused by the value of &quot;pins&quot; in the <a href="https://github.com/stm32duino/Arduino_Core_STM32">STM32 Arduino core</a>.
+          In this article, I will explain the cause of the bug and the workaround for current version of the libraries.</p>
+              <img alt="" class="m-image" src= "/data/ST7735_bug/working_1.webp"/>
+        </header>
+        <footer>
+          <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2026-01-17T00:00:00+08:00">Sat 17 January 2026</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-01-17T00:00:00+08:00">Sat 17 January 2026</time></span> Tags: <a href="/tag/st7735.html">ST7735</a>, <a href="/tag/stm32.html">STM32</a>, <a href="/tag/arduino.html">Arduino</a>.</p>
+        </footer>
+        <div class="m-clearfix-l"></div>
+      </article>
+      <article>
+        <header>
+          <h1><a href="/Blog/74hc595_testing.html" rel="bookmark" title="Permalink to Testing the driving capability of the 74HC595 shift register">
+            <time class="m-date" datetime="2025-05-13T00:00:00+08:00">
+              May <span class="m-date-day">13</span> 2025
+            </time>
+            Testing the driving capability of the 74HC595 shift register
+          </a></h1>
+              <p>The 74HC595 shift register is one of the most popular 74 series IC these days.
+          It is often used to convert serial data into parallel and drive LEDs.
+          A project of mine used it drive multiple LEDs.
+          This made me wonder how much current can this IC actually supply.
+          Therefore, I did some testing on the driving capability of the 74HC595 shift register.</p>
+              <img alt="" class="m-image" src= "/data/74hc595-testing/74hc595-testing-breadboard.jpg"/>
+        </header>
+        <footer>
+          <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2025-05-13T00:00:00+08:00">Tue 13 May 2025</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-01-12T00:00:00+08:00">Mon 12 January 2026</time></span></p>
+        </footer>
+        <div class="m-clearfix-l"></div>
+      </article>
+      <article>
+        <header>
+          <h1><a href="/Blog/vscode-fractional-scaling.html" rel="bookmark" title="Permalink to Fixing blurry VSCode, Microsoft Edge on Ubuntu with fractional scaling">
+            <time class="m-date" datetime="2025-02-10T00:00:00+08:00">
+              Feb <span class="m-date-day">10</span> 2025
+            </time>
+            Fixing blurry VSCode, Microsoft Edge on Ubuntu with fractional scaling
+          </a></h1>
+              <p>New laptops with 2880x1800 OLED screens look great.
+          However, I prefer setting the fractional scaling to 175% to fit more content on the screen.
+          Currently on Ubuntu(22.04 &amp; 24.04 in my case), the fractional scaling process cause some applications to become blurry.
+          In this article, I will show you the workarounds to get VSCode and Microsoft Edge look sharp again.
+          However, there are still other apps that I unfortunately don't have a fix(Kicad, Rawtherapee to name a few).
+          Also, I'll show you how to modify the laucher .desktop file so that the flags we added later will be applied when you click the icon in the laucher.</p>
+        </header>
+        <footer>
+          <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2025-02-10T00:00:00+08:00">Mon 10 February 2025</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-01-12T00:00:00+08:00">Mon 12 January 2026</time></span></p>
+        </footer>
+        <div class="m-clearfix-l"></div>
+      </article>
+      <article>
+        <header>
+          <h1><a href="/Blog/ADS1115.html" rel="bookmark" title="Permalink to Operating the ADS1115 ADC in continuous mode with Arduino">
+            <time class="m-date" datetime="2025-02-04T00:00:00+08:00">
+              Feb <span class="m-date-day">04</span> 2025
+            </time>
+            Operating the ADS1115 ADC in continuous mode with Arduino
+          </a></h1>
+              <p>ADS1115 is a 16-bit delta-sigma analogue to digital converter(ADC) designed by Texas Instruments.
+          It has a maximum sampling rate of 860 samples per second.
+          However, the maximum sampling rate can only be achieved in continuous mode.
+          This article provides an Arduino example of how to interface the ADS1115 in continuous mode.</p>
+              <img alt="" class="m-image" src= "/data/ADS1115/ADS1115-cover.jpg"/>
+        </header>
+        <footer>
+          <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2025-02-04T00:00:00+08:00">Tue 04 February 2025</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-01-11T00:00:00+08:00">Sun 11 January 2026</time></span> Tags: <a href="/tag/ads1115.html">ADS1115</a>, <a href="/tag/adc.html">ADC</a>, <a href="/tag/arduino.html">Arduino</a>.</p>
+        </footer>
+        <div class="m-clearfix-l"></div>
+      </article>
+      <article>
+        <header>
+          <h1><a href="/Blog/kicad-spice.html" rel="bookmark" title="Permalink to SPICE simulation with Kicad">
+            <time class="m-date" datetime="2025-01-05T00:00:00+08:00">
+              Jan <span class="m-date-day">05</span> 2025
+            </time>
+            SPICE simulation with Kicad
+          </a></h1>
+              <p>Kicad is an open-source electronics design suite, mainly used in PCB design.
+          It also has built-in Ngspice simulator to simulator circuit behaviours.
+          In this airticle, we will go through the basic setup of SPICE simulation in Kicad and how to find extra SPICE models.</p>
+              <img alt="" class="m-image" src= "/data/kicad-spice/kicad-spice-cover.png"/>
+        </header>
+        <footer>
+          <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2025-01-05T00:00:00+08:00">Sun 05 January 2025</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-01-12T00:00:00+08:00">Mon 12 January 2026</time></span> Tags: <a href="/tag/kicad.html">Kicad</a>, <a href="/tag/spice.html">SPICE</a>, <a href="/tag/simulation.html">Simulation</a>.</p>
+        </footer>
+        <div class="m-clearfix-l"></div>
+      </article>
+      <article>
+        <header>
+          <h1><a href="/Blog/TMAG5170.html" rel="bookmark" title="Permalink to TMAG5170 3D Hall-effect sensor">
+            <time class="m-date" datetime="2024-11-20T00:00:00+08:00">
+              Nov <span class="m-date-day">20</span> 2024
+            </time>
+            TMAG5170 3D Hall-effect sensor
+          </a></h1>
+              <p>TMAG5170 is a 3-axis precision Hall effect sensor designed by Texas Instruments.
+          On top of the Hall effect sensor, there is a temperature sensor and angle calculator intergrated in the IC.
+          The functions of the IC can be interfaced with SPI.
+          There are two variant of this IC, A1 and A2, the two variants differ in measuring range.</p>
+              <img alt="" class="m-image" src= "/data/TMAG5170/TMAG5170-pinout.png"/>
+        </header>
+        <footer>
+          <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2024-11-20T00:00:00+08:00">Wed 20 November 2024</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-01-07T00:00:00+08:00">Wed 07 January 2026</time></span> Tags: <a href="/tag/tmag5170.html">TMAG5170</a>, <a href="/tag/hall-effect.html">Hall Effect</a>, <a href="/tag/sensor.html">Sensor</a>.</p>
+        </footer>
+        <div class="m-clearfix-l"></div>
+      </article>
+    </div>
+<!--     <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="/Blog/">Blog</a></li>
+        <li><a href="/Product/">Product</a></li>
+      </ol>
+      <h3>Tag cloud</h3>
+      <ul class="m-tagcloud">
+        <li class="m-tag-2"><a href="/tag/8-bit.html">8-bit</a></li>
+        <li class="m-tag-2"><a href="/tag/adc.html">ADC</a></li>
+        <li class="m-tag-2"><a href="/tag/ads1115.html">ADS1115</a></li>
+        <li class="m-tag-3"><a href="/tag/arduino.html">Arduino</a></li>
+        <li class="m-tag-5"><a href="/tag/breadboard.html">Breadboard</a></li>
+        <li class="m-tag-2"><a href="/tag/display.html">Display</a></li>
+        <li class="m-tag-2"><a href="/tag/efuse.html">eFuse</a></li>
+        <li class="m-tag-2"><a href="/tag/flash.html">Flash</a></li>
+        <li class="m-tag-2"><a href="/tag/fpga.html">FPGA</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-effect.html">Hall Effect</a></li>
+        <li class="m-tag-2"><a href="/tag/hexadecimal.html">Hexadecimal</a></li>
+        <li class="m-tag-2"><a href="/tag/kicad.html">Kicad</a></li>
+        <li class="m-tag-2"><a href="/tag/overcurrent-protection.html">Overcurrent Protection</a></li>
+        <li class="m-tag-2"><a href="/tag/pmod.html">PMOD</a></li>
+        <li class="m-tag-2"><a href="/tag/power-supply.html">Power Supply</a></li>
+        <li class="m-tag-2"><a href="/tag/raspberry-pi-pico.html">Raspberry Pi Pico</a></li>
+        <li class="m-tag-2"><a href="/tag/register.html">Register</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2040.html">RP2040</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2350.html">RP2350</a></li>
+        <li class="m-tag-2"><a href="/tag/sensor.html">Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/serial-wire-debug.html">Serial Wire Debug</a></li>
+        <li class="m-tag-2"><a href="/tag/simulation.html">Simulation</a></li>
+        <li class="m-tag-2"><a href="/tag/spice.html">SPICE</a></li>
+        <li class="m-tag-2"><a href="/tag/st7735.html">ST7735</a></li>
+        <li class="m-tag-2"><a href="/tag/stm32.html">STM32</a></li>
+        <li class="m-tag-2"><a href="/tag/tmag5170.html">TMAG5170</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+ -->
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>light655. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
