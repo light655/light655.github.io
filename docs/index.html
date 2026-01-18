@@ -12,8 +12,8 @@
   <meta property="og:title" content="Documentation" />
   <meta name="twitter:title" content="Documentation" />
   <meta property="og:url" content="/" />
-  <meta property="og:description" content="arduino-tmag5170 A TMAG5170 Hall-effect sensor library for Arduino. Documentation under construction. Link to Github repository. pico-tmag5170 A TMAG5170 Hall-effect sensor library for Raspberry Pi Pico SDK. Link to documentation. Link to Github repository." />
-  <meta name="twitter:description" content="arduino-tmag5170 A TMAG5170 Hall-effect sensor library for Arduino. Documentation under construction. Link to Github repository. pico-tmag5170 A TMAG5170 Hall-effect sensor library for Raspberry Pi Pico SDK. Link to documentation. Link to Github repository." />
+  <meta property="og:description" content="arduino-tmag5170 A TMAG5170 Hall-effect sensor library for Arduino. The content of this library is ported over from my pico-tmag5170 library. Most of the public functions are identical. The only difference is the attachSPI(int spi_cs_pin, int buadrate) function. You only need to specify the CS pin and the SPI buadrate …" />
+  <meta name="twitter:description" content="arduino-tmag5170 A TMAG5170 Hall-effect sensor library for Arduino. The content of this library is ported over from my pico-tmag5170 library. Most of the public functions are identical. The only difference is the attachSPI(int spi_cs_pin, int buadrate) function. You only need to specify the CS pin and the SPI buadrate …" />
   <meta name="twitter:card" content="summary" />
   <meta property="og:type" content="page" />
 </head>
@@ -48,9 +48,14 @@
 <!-- content -->
 <section id="arduino-tmag5170">
 <h2>arduino-tmag5170</h2>
-<p>A TMAG5170 Hall-effect sensor library for Arduino.</p>
+<p>A TMAG5170 Hall-effect sensor library for Arduino.
+The content of this library is ported over from my pico-tmag5170 library.
+Most of the public functions are identical.</p>
+<p>The only difference is the <code class="m-code"><span class="n">attachSPI</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">spi_cs_pin</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">buadrate</span><span class="p">)</span></code> function.
+You only need to specify the CS pin and the SPI buadrate.
+The library will use the default hardware SPI pins on the Arduino.</p>
 <ul>
-<li>Documentation under construction.</li>
+<li>Please refer to the pico-tmag5170 documentation for information about other functions.</li>
 <li><a href="https://github.com/light655/arduino-tmag5170">Link to Github repository.</a></li>
 </ul>
 </section>
