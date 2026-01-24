@@ -160,6 +160,10 @@ What does the macro PA2 actually stand for?
 It turns out to be 0xC2 in hexadecimal, <strong>which is -62 in decimal if intepreted as 8-bit signed integer</strong>.
 Therefore, although we supplied a valid pin number for the CS pin, the library still determines that we are disabling this pin.
 The same story goes for the RST pin as well.</p>
+<figure class="m-figure">
+<img src="/data/ST7735_bug/IMG_0910.jpg" />
+<figcaption>Multiple layers of definitions behind the &quot;PA2&quot; macro.</figcaption>
+</figure>
 </section>
 <section id="workaround">
 <h2>Workaround</h2>

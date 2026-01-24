@@ -119,18 +119,18 @@ The callback function will set the <code class="m-code"><span class="n">new_data
 <li>Read initial time</li>
 </ul>
 <pre class="m-code"><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
 
-<span class="c1">// The convertion is ready on the falling edge of a pulse at the ALERT/RDY pin.</span>
-<span class="n">attachInterrupt</span><span class="p">(</span><span class="n">digitalPinToInterrupt</span><span class="p">(</span><span class="n">intPin</span><span class="p">),</span><span class="w"> </span><span class="n">newDataReady</span><span class="p">,</span><span class="w"> </span><span class="n">FALLING</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// The convertion is ready on the falling edge of a pulse at the ALERT/RDY pin.</span>
+<span class="w">    </span><span class="n">attachInterrupt</span><span class="p">(</span><span class="n">digitalPinToInterrupt</span><span class="p">(</span><span class="n">intPin</span><span class="p">),</span><span class="w"> </span><span class="n">newDataReady</span><span class="p">,</span><span class="w"> </span><span class="n">FALLING</span><span class="p">);</span>
 
-<span class="n">myADS</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
-<span class="n">myADS</span><span class="p">.</span><span class="n">setGain</span><span class="p">(</span><span class="n">GAIN_FOUR</span><span class="p">);</span><span class="w">   </span><span class="c1">// +- 1.024V range</span>
-<span class="n">myADS</span><span class="p">.</span><span class="n">setDataRate</span><span class="p">(</span><span class="n">RATE_ADS1115_860SPS</span><span class="p">);</span>
-<span class="n">myADS</span><span class="p">.</span><span class="n">startADCReading</span><span class="p">(</span><span class="n">ADS1X15_REG_CONFIG_MUX_SINGLE_0</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
-<span class="c1">// We should set &quot;continuous&quot; to true to reach optimal speed.</span>
+<span class="w">    </span><span class="n">myADS</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+<span class="w">    </span><span class="n">myADS</span><span class="p">.</span><span class="n">setGain</span><span class="p">(</span><span class="n">GAIN_FOUR</span><span class="p">);</span><span class="w">   </span><span class="c1">// +- 1.024V range</span>
+<span class="w">    </span><span class="n">myADS</span><span class="p">.</span><span class="n">setDataRate</span><span class="p">(</span><span class="n">RATE_ADS1115_860SPS</span><span class="p">);</span>
+<span class="w">    </span><span class="n">myADS</span><span class="p">.</span><span class="n">startADCReading</span><span class="p">(</span><span class="n">ADS1X15_REG_CONFIG_MUX_SINGLE_0</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// We should set &quot;continuous&quot; to true to reach optimal speed.</span>
 
-<span class="n">t0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">micros</span><span class="p">();</span>
+<span class="w">    </span><span class="n">t0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">micros</span><span class="p">();</span>
 <span class="p">}</span></pre>
 <p>For the serial communication, we need a higher baud rate to send data to the computer fast enough.
 We'll use 115200 here.</p>

@@ -68,6 +68,28 @@ Therefore, the test result is still pretty accurate (<em>as long as you are only
 <img class="m-image" src="/data/74hc595-testing/74hc595-testing-breadboard-annotated.jpg" />
 <p>I am planning on doing a test with all 8 outputs loaded, stay tuned!</p>
 </section>
+<hr />
+<section id="section-2">
+<h2>(2026/01/21)</h2>
+<p>I was working on the arduino-TMAG5170 library and a nasty bug took me half a day to spot.
+I typically develop new features on the pico-TMAG5170 with Raspberry Pi Pico SDK, since I am more familiar with that.
+Then, I port the new code into the Arduino library and test them.</p>
+<p>Today, I was porting the continuous measurement example.
+I found that the very similar code running on the Arduino Uno is much slower than on the Pi Pico.
+I know that there is large performance difference between the two microcontrollers, but that code was running way slower than anticipated.</p>
+<p>It turned out that the <code class="m-code"><span class="n">attachSPI</span><span class="p">()</span></code> function had a bug inside that I didn't spot when I first ported the library.
+The bug was: the parameter <code class="m-code"><span class="n">buadrate</span></code> was an &quot;int&quot;.
+Why was this a bug?
+Because the C standard only specified the &quot;int&quot; to be at least 16 bits wide.
+Although most devices (including the Pico) have 32-bit &quot;int&quot; nowadays, the Arduino Uno has 16-bit &quot;int&quot;.
+Therefore, I was expecting the <code class="m-code"><span class="n">buadrate</span></code> parameter to hold a 32-bit value but it wasn't.
+In the example, I set the SPI baudrate to 1MHz, which can be fitted into a 32-bit &quot;int&quot; but not a 16-bit &quot;int&quot;.
+The most significant 16 bits are truncated, leaving the final value of 16960 Hz.
+This explains why the code was running much slower than I expected.</p>
+<p>To solve this issue, I changed the type into &quot;uint32_t&quot;.
+By explicitly setting the bit width, the aforementioned problem won't occur.
+The taken away is, we use types that explicitly set the bit width in an Arduino library to maintain compatibility with different series of microcontrollers.</p>
+</section>
 <!-- /content -->
       </div>
     </div>
