@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <title>Driving a stepper motor with STM32's timer peripheral. | light655</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="/static/m-dark.css" />
+  <link rel="canonical" href="/Blog/stm32_timer_stepper.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#cb4b16" />
+  <meta property="og:site_name" content="light655" />
+  <meta property="og:title" content="Driving a stepper motor with STM32's timer peripheral." />
+  <meta name="twitter:title" content="Driving a stepper motor with STM32's timer peripheral." />
+  <meta property="og:url" content="/Blog/stm32_timer_stepper.html" />
+  <meta property="og:description" content="I was working on controlling some stepper motors on a robot. I wanted to control them with an STM32. The STM32 is controlled by a Raspberry Pi 5 with SPI. To generate the periodic signal for the stepper driver, I used the timer peripheral on the STM32. I this blog, I will go through the basics of the timer peripheral and how I set it up for this usage." />
+  <meta name="twitter:description" content="I was working on controlling some stepper motors on a robot. I wanted to control them with an STM32. The STM32 is controlled by a Raspberry Pi 5 with SPI. To generate the periodic signal for the stepper driver, I used the timer peripheral on the STM32. I this blog, I will go through the basics of the timer peripheral and how I set it up for this usage." />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="/" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">light655</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="/blab.html">Blab</a></li>
+            <li><a href="/Blog/">Blog</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="/docs/">Documentation</a></li>
+            <li><a href="/Product/">Product</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="/Blog/stm32_timer_stepper.html" rel="bookmark" title="Permalink to Driving a stepper motor with STM32's timer peripheral.">
+          <time class="m-date" datetime="2026-01-31T00:00:00+08:00">
+            Jan <span class="m-date-day">31</span> 2026
+          </time>
+          Driving a stepper motor with STM32's timer peripheral.
+        </a></h1>
+        <p>I was working on controlling some stepper motors on a robot.
+        I wanted to control them with an STM32.
+        The STM32 is controlled by a Raspberry Pi 5 with SPI.
+        To generate the periodic signal for the stepper driver, I used the timer peripheral on the STM32.
+        I this blog, I will go through the basics of the timer peripheral and how I set it up for this usage.</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<section id="drv8825-stepper-motor-driver">
+<h2>DRV8825 Stepper Motor Driver</h2>
+<p>The STM32 microcontroller cannot provide the necessary current and voltage for the stepper motor.
+Thus, We need an external driver IC to drive the stepper motor.
+I used a very common driver module based on Texas Instruments' DRV8825 IC.</p>
+<figure class="m-figure">
+<img src="/data/stm32_timer_stepper/drv8825.webp" />
+<figcaption>Minimal wiring diagram of the DRV8825 module by <a href="https://www.pololu.com/product/2133">Pololu</a>, the designer of this module.</figcaption>
+</figure>
+<p>We only need to send two signals to the DRV8825 to spin the stepper motor.
+The DIR signal determines whether to spin clockwise or anti-clockwise.
+The STEP signal instructs the stepper motor to advance one step.
+When a pulse is sent to the STEP input, the stepper motor will advance one step.
+There are some other control signals for setting up microstepping or disabling the driver,
+please check out <a href="https://lastminuteengineers.com/drv8825-stepper-motor-driver-arduino-tutorial/">this article by Last Minute Engineers</a> for more information.
+The connection between the STM32 and the DRV8825 module in this project is listed in the table below.</p>
+<img class="m-image" src="/data/stm32_timer_stepper/pulse_to_step.webp" />
+<table class="m-table">
+<thead>
+<tr><th>DRV8825</th>
+<th>STM32</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>ENb</td>
+<td>PB1</td>
+</tr>
+<tr><td>STEP</td>
+<td>PB0</td>
+</tr>
+<tr><td>DIR</td>
+<td>PB10</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore, to spin the stepper motor at a controlled rate, all we need to do is to generate a periodic pulse signal.
+I am using a NEMA17 motor with 200 steps per revolution.
+Let's say we want to spin the motor at 2 revolution per second, we need to generate 400 pulse per second, that is one pulse every 2.5ms.</p>
+</section>
+<section id="why-use-the-timer-peripheral">
+<h2>Why use the timer peripheral?</h2>
+<p>For any modern microcontroller, generating a pulse with 2.5ms period shouldn't be a hard task for the CPU.
+However, the CPU should be doing something more meaningful such as math calculations or decision making.
+An easy task like generating periodic pulse can be offloaded to the timer peripheral.
+All microcontrollers have some sort of timer peripheral, as it is so commonly used.</p>
+<figure class="m-figure">
+<img src="/data/stm32_timer_stepper/stm32_block_diagram.webp" />
+<figcaption>The block diagram of the STM32F103C8T6. The timers are marked in red.<div class="m-figure-description">
+There are several different kinds of timer peripheral on the STM32, we are using the general-purpose timer TIM3.</div>
+</figcaption>
+</figure>
+<p>A timer is basically a counter that increments (or decrements) every clock cycle.
+We can set a value to compare with the counter, when they are the same, the microcontroller can trigger some specific actions.
+We can also set the top (auto reload) value of the counter, at which it will reset and count from the start again.</p>
+<img class="m-image" src="/data/stm32_timer_stepper/timer_general.webp" />
+<p>In our case, we are only interested in controlling the period, so we will set both the compare and top values to the same value.
+We will use the output compare mode and toggle the output pin when the counter counts to the top.
+This way, we can generate a pulse every two counter cycles.</p>
+<figure class="m-figure">
+<img src="/data/stm32_timer_stepper/timer_our.webp" />
+<figcaption>The counting waveform in my setup.<div class="m-figure-description">
+I set the top (auto-reload) and compare values the same and set the output to toggle on match.
+This way, a pulse will be generated when the counter counts to the top twice.</div>
+</figcaption>
+</figure>
+</section>
+<section id="setting-up-the-timer-in-stm32-cube-mx">
+<h2>Setting up the timer in STM32 Cube MX.</h2>
+<p>We are using the STM32F103C8T6 today, with the clock frequency set to 8MHz.
+TIM3 is used on the STM32, the pulse signal will be generated on its channel 3.
+Therefore, we need to enable TIM3 in Cube MX and set channel 3 to output compare mode.
+The pulse signal output will be on pin PB0.
+We also need to enable PB1, PB10, and PC13 as GPIO output for ENb, DIR, and LED, respectively.</p>
+<img class="m-image" src="/data/stm32_timer_stepper/stm32_cube_mx.webp" />
+<p>I figure that setting the pulse period resolution to 8us will give us a good balance between stepper motor speed range and precision.
+To achieve this, we need to slow down the clock for the TIM3 to 0.25MHz (4us per clock cycle) by setting the prescaler to 31.
+The prescaler will divided the 8MHz clock by a factor of 31 + 1 and give us the desired 0.25MHz clock.
+Since the pulse is generated every two counter cycles, the resolution will be 4us * 2 = 8us.</p>
+<img class="m-image" src="/data/stm32_timer_stepper/timer_mode.webp" />
+<p>I will leave the counter period as default since it will be set on the fly in my code.
+Remember to enable auto-reload preload, this will prevent glitches when we change the auto-reload value.
+I will set the output compare mode to toggle on match and also enable output compare preload.</p>
+<img class="m-image" src="/data/stm32_timer_stepper/timer_configuration.webp" />
+</section>
+<section id="spi-slave-mode">
+<h2>SPI slave mode.</h2>
+<p>This project is a part of a robot whose central controller is a Raspberry Pi 5.
+The STM32F103C8T6 is an SPI slave and it will receive commands from the Pi 5 to spin the motor at the specified speed,
+but I will be testing it with a Pi Pico 2 as the master instead in this blog.
+I will go into the details of SPI slave mode operation in a future blog.
+Everytime an SPI frame is received on the STM32, it will trigger and interrupt and set the new compare and auto-reload values.</p>
+<img class="m-image" src="/data/stm32_timer_stepper/setup.webp" />
+<figure class="m-figure">
+<img src="/data/stm32_timer_stepper/frame_format.webp" />
+<figcaption>The format of the 16-bit SPI frame.<div class="m-figure-description">
+The most significant two bits are enable and direction, respectively.
+There are two reserved bits if there is any future needs.
+The period data is 12 bits.</div>
+</figcaption>
+</figure>
+</section>
+<section id="changing-the-compare-and-auto-reload-values">
+<h2>Changing the compare and auto-reload values.</h2>
+<p>The two values are stored at two specific memory addresses so that they can be accessed by the timer peripheral.
+Luckily, we can use some built-in functions to set them without knowing the addresses.
+I wrote a function using those built-in ones to set the two values.</p>
+<pre class="m-code"><span class="kt">void</span><span class="w"> </span><span class="nf">set_period</span><span class="p">(</span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">period</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// Sets the period for the step signal</span>
+<span class="w">    </span><span class="n">__HAL_TIM_SET_COMPARE</span><span class="p">(</span><span class="o">&amp;</span><span class="n">htim3</span><span class="p">,</span><span class="w"> </span><span class="n">TIM_CHANNEL_3</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">);</span>
+<span class="w">    </span><span class="n">__HAL_TIM_SET_AUTORELOAD</span><span class="p">(</span><span class="o">&amp;</span><span class="n">htim3</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">);</span>
+<span class="p">}</span></pre>
+</section>
+<section id="walking-through-of-the-timer-related-code">
+<h2>Walking through of the timer related code.</h2>
+<p>STM32 Cube MX generated most of the setup code for the timer.
+However, there is one thing that we need to add manually to the <code class="m-code"><span class="n">main</span><span class="p">()</span></code> function.
+We need to start the output compare timer using the following function.
+We are using timer 3 and channel 3, so we need to set them here as well.
+To start the SPI slave interrupt, we need to call SPI receive interrupt function.</p>
+<pre class="m-code"><span class="c1">// put these lines in main() before the while(1) loop</span>
+<span class="n">HAL_TIM_OC_Start</span><span class="p">(</span><span class="o">&amp;</span><span class="n">htim3</span><span class="p">,</span><span class="w"> </span><span class="n">TIM_CHANNEL_3</span><span class="p">);</span><span class="w">                    </span><span class="c1">// start output compare timer</span>
+<span class="n">HAL_SPI_Receive_IT</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hspi1</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">received_frame</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">   </span><span class="c1">// start SPI slave interrupt</span></pre>
+<p>Then, every time the SPI receive interrupt is triggered, the CPU will jump to the <code class="m-code"><span class="n">HAL_SPI_RxCpltCallback</span><span class="p">()</span></code> function.
+In this function, we need to set the period and restart the SPI receive interrupt.
+We first check the most significant two bits for the enable and direction settings.
+Then, we compare the last 12 bits to <code class="m-code"><span class="n">MIN_PERIOD</span></code>.
+If it is smaller than <code class="m-code"><span class="n">MIN_PERIOD</span></code>, we will set the actual period to <code class="m-code"><span class="n">MIN_PERIOD</span></code>.
+This is because the stepper motor cannot operate at the maximum frequency of our counter setup.
+In my case, I set <code class="m-code"><span class="n">MIN_PERIOD</span></code> to 64.</p>
+<pre class="m-code"><span class="k">volatile</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">received_frame</span><span class="p">;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">HAL_SPI_RxCpltCallback</span><span class="p">(</span><span class="n">SPI_HandleTypeDef</span><span class="w"> </span><span class="o">*</span><span class="n">hspi</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">received_frame</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0x8000</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// check MSB</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">direction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">received_frame</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0x4000</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// check bit 14</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">raw_period</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">received_frame</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0x0FFF</span><span class="p">;</span><span class="w"> </span><span class="c1">// last 12 bits</span>
+
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">period</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">raw_period</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">MIN_PERIOD</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">period</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MIN_PERIOD</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">period</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">raw_period</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">set_period</span><span class="p">(</span><span class="n">period</span><span class="p">);</span>
+<span class="w">    </span><span class="n">HAL_GPIO_WritePin</span><span class="p">(</span><span class="n">GPIOB</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_PIN_1</span><span class="p">,</span><span class="w"> </span><span class="o">!</span><span class="n">enable</span><span class="p">);</span><span class="w"> </span><span class="c1">// enable is low active on PB1</span>
+<span class="w">    </span><span class="n">HAL_GPIO_WritePin</span><span class="p">(</span><span class="n">GPIOC</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_PIN_13</span><span class="p">,</span><span class="w"> </span><span class="o">!</span><span class="n">enable</span><span class="p">);</span><span class="w"> </span><span class="c1">// LED is low active on PC13</span>
+<span class="w">    </span><span class="n">HAL_GPIO_WritePin</span><span class="p">(</span><span class="n">GPIOB</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_PIN_10</span><span class="p">,</span><span class="w"> </span><span class="n">direction</span><span class="p">);</span><span class="w"> </span><span class="c1">// direction on PB10</span>
+
+<span class="w">    </span><span class="n">HAL_SPI_Receive_IT</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hspi1</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">received_frame</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w"> </span><span class="c1">// Restart SPI reception</span>
+<span class="p">}</span></pre>
+<p>Since all tasks are done in the interrupt, we don't need to put anything in the <code class="m-code"><span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></code> loop.
+And that's everything we need to write!
+You can download the source code of the STM32 Cube project <a href="/data/stm32_timer_stepper/spi_timer_stepper.zip">here</a>.
+Note that I use CMake as my build system.</p>
+</section>
+<section id="reference">
+<h2>Reference</h2>
+<ul>
+<li><a href="https://www.ti.com/lit/ds/symlink/drv8825.pdf">DRV8825 Datasheet</a>.</li>
+<li><a href="https://www.st.com/en/microcontrollers-microprocessors/stm32f103/documentation.html">STM32F103 Reference Manual RM0008</a>.
+The description of general-purpose timer is on page 365.</li>
+</ul>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2026-01-31T00:00:00+08:00">Sat 31 January 2026</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-02-03T00:00:00+08:00">Tue 03 February 2026</time></span> Tags: <a href="/tag/stm32.html">STM32</a>, <a href="/tag/timer.html">Timer</a>, <a href="/tag/stepper-motor.html">Stepper Motor</a>, <a href="/tag/drv8825.html">DRV8825</a>.</p>
+      </footer>
+    </article>
+<!--     <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="/Blog/">Blog</a></li>
+        <li><a href="/Product/">Product</a></li>
+      </ol>
+      <h3>Tag cloud</h3>
+      <ul class="m-tagcloud">
+        <li class="m-tag-2"><a href="/tag/8-bit.html">8-bit</a></li>
+        <li class="m-tag-2"><a href="/tag/adc.html">ADC</a></li>
+        <li class="m-tag-2"><a href="/tag/ads1115.html">ADS1115</a></li>
+        <li class="m-tag-3"><a href="/tag/arduino.html">Arduino</a></li>
+        <li class="m-tag-5"><a href="/tag/breadboard.html">Breadboard</a></li>
+        <li class="m-tag-2"><a href="/tag/display.html">Display</a></li>
+        <li class="m-tag-2"><a href="/tag/drv8825.html">DRV8825</a></li>
+        <li class="m-tag-2"><a href="/tag/efuse.html">eFuse</a></li>
+        <li class="m-tag-2"><a href="/tag/flash.html">Flash</a></li>
+        <li class="m-tag-2"><a href="/tag/fpga.html">FPGA</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-effect.html">Hall Effect</a></li>
+        <li class="m-tag-2"><a href="/tag/hexadecimal.html">Hexadecimal</a></li>
+        <li class="m-tag-2"><a href="/tag/kicad.html">Kicad</a></li>
+        <li class="m-tag-2"><a href="/tag/overcurrent-protection.html">Overcurrent Protection</a></li>
+        <li class="m-tag-2"><a href="/tag/pmod.html">PMOD</a></li>
+        <li class="m-tag-2"><a href="/tag/power-supply.html">Power Supply</a></li>
+        <li class="m-tag-2"><a href="/tag/raspberry-pi-pico.html">Raspberry Pi Pico</a></li>
+        <li class="m-tag-2"><a href="/tag/register.html">Register</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2040.html">RP2040</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2350.html">RP2350</a></li>
+        <li class="m-tag-2"><a href="/tag/sensor.html">Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/serial-wire-debug.html">Serial Wire Debug</a></li>
+        <li class="m-tag-2"><a href="/tag/simulation.html">Simulation</a></li>
+        <li class="m-tag-2"><a href="/tag/spice.html">SPICE</a></li>
+        <li class="m-tag-2"><a href="/tag/st7735.html">ST7735</a></li>
+        <li class="m-tag-2"><a href="/tag/stepper-motor.html">Stepper Motor</a></li>
+        <li class="m-tag-3"><a href="/tag/stm32.html">STM32</a></li>
+        <li class="m-tag-2"><a href="/tag/timer.html">Timer</a></li>
+        <li class="m-tag-2"><a href="/tag/tmag5170.html">TMAG5170</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+ -->
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>light655. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
