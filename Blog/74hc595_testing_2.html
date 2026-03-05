@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <title>How much current can the 74HC595 shift register provide? | light655</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="/static/m-dark.css" />
+  <link rel="canonical" href="/Blog/74hc595_testing_2.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#cb4b16" />
+  <meta property="og:site_name" content="light655" />
+  <meta property="og:title" content="How much current can the 74HC595 shift register provide?" />
+  <meta name="twitter:title" content="How much current can the 74HC595 shift register provide?" />
+  <meta property="og:url" content="/Blog/74hc595_testing_2.html" />
+  <meta property="og:description" content="The 74HC595 is one of the most common logic ICs out there, especially in the Arduino community. It is often utilised to drive multiple LEDs with serial input. A project of mine used it drive multiple LEDs. I found that the LED brightness reduces when too many of them are on. This made me wonder how much current can this IC actually supply. I measured the IV curve of the output of the 74HC595 last year. But I found that the measurement was kind of flawed. Therefore, I measured it again in this blog and documented the details in my setup." />
+  <meta name="twitter:description" content="The 74HC595 is one of the most common logic ICs out there, especially in the Arduino community. It is often utilised to drive multiple LEDs with serial input. A project of mine used it drive multiple LEDs. I found that the LED brightness reduces when too many of them are on. This made me wonder how much current can this IC actually supply. I measured the IV curve of the output of the 74HC595 last year. But I found that the measurement was kind of flawed. Therefore, I measured it again in this blog and documented the details in my setup." />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="/" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">light655</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="/blab.html">Blab</a></li>
+            <li><a href="/Blog/">Blog</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="/docs/">Documentation</a></li>
+            <li><a href="/Product/">Product</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="/Blog/74hc595_testing_2.html" rel="bookmark" title="Permalink to How much current can the 74HC595 shift register provide?">
+          <time class="m-date" datetime="2026-02-28T00:00:00+08:00">
+            Feb <span class="m-date-day">28</span> 2026
+          </time>
+          How much current can the 74HC595 shift register provide?
+        </a></h1>
+        <p>The 74HC595 is one of the most common logic ICs out there, especially in the Arduino community.
+        It is often utilised to drive multiple LEDs with serial input.
+        A project of mine used it drive multiple LEDs.
+        I found that the LED brightness reduces when too many of them are on.
+        This made me wonder how much current can this IC actually supply.
+        I measured the IV curve of the output of the 74HC595 last year.
+        But I found that the measurement was kind of flawed.
+        Therefore, I measured it again in this blog and documented the details in my setup.</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<section id="the-test-setup">
+<h2>The test setup.</h2>
+<figure class="m-figure">
+<img src="/data/74hc595-testing-2/full_setup.webp" />
+<figcaption>The measurement setup.<div class="m-figure-description">
+The STM32 sends pulses of different voltages to the gate of a 2N7000 MOSFET which in turn draws current from the outputs of a 74HC595.
+The voltage and current of the output are measured and processed to plot the IV curve.</div>
+</figcaption>
+</figure>
+<p>Last time, I only pulled current from 1 output on the 74HC595.
+However, the 74HC595 typically drives multiple LEDs when it used as an LED driver.
+Therefore, I pulled current from all 8 outputs of the 74HC595 this time.</p>
+<p>I connected all 8 outputs together to the drain of a MOSFET, which will act as a constant current sink.
+The gate voltage of the MOSFET was controlled by an STM32's DAC.
+To prevent the MOSFET from overheating, the gate voltage was given in 1ms-pulses.</p>
+<p>The total current provided by all 8 outputs were passed through a 2.2Ω resistor.
+The voltage across the resistor was then amplified by a current sense amplifier with a gain of 15 V/V.
+The current sense circuitry map 0 to 100mA to 0 to 3.3V at the STM32's ADC input.</p>
+<p>We can divide the measured current by 8 to find the current of 1 output of the 74HC595.</p>
+</section>
+<section id="the-current-sense-amplifier">
+<h2>The current sense amplifier.</h2>
+<p>I used the Holtek HT92632 precision opamp in the current sense amplifier.
+It can be powered with 5V and has a typical input offset voltage of 15 uV.
+The inputs and outputs of this opamp can swing to the supply rail, which is crucial for this application.
+It has low bandwidth and slew rate, but we are only doing low speed measurements so it is acceptable.
+Another reason for choosing this opamp is its availability.
+Holtek has online store which make purchasing their chips very easy (at least in Taiwan).</p>
+<figure class="m-figure">
+<img src="/data/74hc595-testing-2/opamp.webp" />
+<figcaption>The specification of the HT92632 opamp that I'am using in this blog.<div class="m-figure-description">
+Source: Holtek datasheet.</div>
+</figcaption>
+</figure>
+<aside class="m-note m-info">
+This is where I screwed up last time.
+I made sure te Kelvin connection is correct this time.</aside>
+<p>The measured current was first passed through a 2.2Ω resistor in Kelvin connection.
+Then, I setup a differential amplifier of gain 15 V/V with the HT92632 opamp.
+With these two stages, the combined trans-impedance gain is 33Ω.</p>
+<figure class="m-figure">
+<img src="/data/74hc595-testing-2/current_sense_schematic.webp" />
+<figcaption>The circuit schematic of the current sense amplifier.</figcaption>
+</figure>
+<p>Before using the current sense amplifier, I decided to measure its DC transfer function first.
+I used a known-accurate current source (from a DC power supply) to pass current through the 2.2Ω resistor and measured the output voltage.</p>
+<figure class="m-figure">
+<img src="/data/74hc595-testing-2/current_sense_verify.webp" />
+<figcaption>The measured DC transfer function of the current sense amplifier.<div class="m-figure-description">
+The actual trans-impedance gain is 31.5Ω, which was due to the tolerances of the resistors.</div>
+</figcaption>
+</figure>
+</section>
+<section id="measuring-the-offset-voltage-of-the-setup">
+<h2>Measuring the offset voltage of the setup.</h2>
+<p>To measure the offset voltage caused by the opamp and the breadboard contact, I setup an amplifier with a gain of approximately 10000.
+I shorted the input of the amplifier together to 2.5V and measured the output of the amplifier (relative to 2.5V).</p>
+<figure class="m-figure">
+<img src="/data/74hc595-testing-2/offset_setup.webp" />
+<figcaption>The circuit for measuring the input offset of the setup.<div class="m-figure-description">
+Since I was using a breadboard, I expected to see more offset than just the input offset voltage of the opamp.
+The input offset voltage of the second opamp is negligible due to the input to that opamp is already 100 times of the input offset voltage.</div>
+</figcaption>
+</figure>
+<p>The input offset of the first stage was amplified by 10000 times, while the input offset of the second stage was amplified by 100 times.
+The second term can be neglected since the first term is approximately 100 times larger.
+Therefore, by dividing the output voltage of the amplifier by 10000, we can calculate the input offset of the setup.</p>
+<figure class="m-figure">
+<img src="/data/74hc595-testing-2/offset_result.webp" />
+<figcaption>The output of the amplifier circuit with input shorted measured with a multimeter.<div class="m-figure-description">
+The actual gain of the amplifier is 10199 V/V.
+This was due to the tolerance of the resistors.
+This meant that the total offset at the input was 52 uV.</div>
+</figcaption>
+</figure>
+<p>The total input offset implies the uncertainty in the input voltage.
+Since we are using a 2.2Ω resistor, the uncertainty in current associated with the input offset voltage would be 52 uV * 2.2Ω = 0.11 mA.</p>
+</section>
+<section id="controlling-the-test-current">
+<h2>Controlling the test current.</h2>
+<p>I was using the 2N7000 N-channel MOSFET.
+The first thing to do was to verify the Id-Vg characteristic.
+The 74HC595 datasheet states the absolute maximum current is 70mA, so I wanted to verify that the 2N7000 could sink this much current with the gate voltage that STM32 can provide.
+Due to the current sense resistor between the ground and the source of the MOSFET, I expected the Id-Vg characteristic to slightly degrade.</p>
+<p>The 2N7000 doesn't have a heat sink mounted, which meant that we cannot apply current and voltage on the device at the same time.
+This is acceptable in normal switching applications since either voltage or current will be 0 when the device is on or off, respectively.
+However, I was operating this MOSFET in the saturation region, so both voltage and current would stress the device at the same time.
+This would lead to heat generation faster than the package could dissipate.
+If we didn't take care, the MOSFET might blow up.</p>
+<figure class="m-figure">
+<img src="/data/74hc595-testing-2/iv_schematic.webp" />
+<figcaption>The schematic for measuring the Id-Vg characteristic of the 2N7000 MOSFET.<div class="m-figure-description">
+The gate voltage of the MOSFET was given by the DAC of an STM32 in pulses, to prevent overheating the MOSFET.</div>
+</figcaption>
+</figure>
+<p>To prevent the MOSFET from overheating, it was only turned on in short pulse.
+In a measurement cycle, the following happens.</p>
+<ol>
+<li>The gate voltage of the MOSFET is driven to the desired level by the DAC on the STM32.</li>
+<li>Wait for 1ms for the voltage and current to stabilise.</li>
+<li>Measure some samples with the ADC.</li>
+<li>Set the gate voltage to 0V to cut off the current.</li>
+<li>Send the measured data back to the computer.
+The communication takes a while, and the MOSFET can cool down during this period.</li>
+</ol>
+<p>When testing the Id-Vg characteristic, I applied 4V from drain to ground to ensure the MOSFET is saturated.</p>
+<figure class="m-figure">
+<img src="/data/74hc595-testing-2/iv_result.webp" />
+<figcaption>The measured Id-Vg characteristic of the 2N7000 MOSFET.<div class="m-figure-description">
+I tested several 2N7000s, most of them have smaller current.
+I picked the one with the most current and it draws roughly 70mA when driven with 3.3V.
+This means that we wouldn't accidentally exceed the absolute maximum of the 74HC595.</div>
+</figcaption>
+</figure>
+</section>
+<section id="actually-measuring-the-74hc595">
+<h2>Actually measuring the 74HC595.</h2>
+<p>It is finally time to measure the IV curve of the 74HC595.
+I connected all 8 outputs together with diodes to the MOSFET current sink.
+The voltage of one output was also measured by the STM32 through a resistor divider.
+The serial input of the 74HC595 was tied to logic 1, since we wanted to measure the current sourcing capability.
+The clocks were connected to a GPIO on the STM32.</p>
+<figure class="m-figure">
+<img src="/data/74hc595-testing-2/full_schematic.webp" />
+<figcaption>The schematic of the whole measurement setup.<div class="m-figure-description">
+The 74HC595 and the opamp run off two different 5V supplies to isolate the power supply noise due to the switching of the 74HC595.</div>
+</figcaption>
+</figure>
+<p>First, the STM32 sends 8 clock pulses to fill the shift register with ones.
+The 9th clock pulse is used to update the storage registers in the 74HC595, which in turn drive the outputs.
+These two actions ensures all 8 outputs will be at logic high.</p>
+<p>Then, the STM32 starts to pulse the gate voltage of the MOSFET until the DAC of the STM32 reaches 3.3V or the measured current reaches 70mA.
+During each pulse, the voltage and current of the 74HC595 output are recorded.
+A Python script on my computer receives the measured data and makes the IV curve plot.</p>
+<figure class="m-figure">
+<img src="/data/74hc595-testing-2/full_iv.webp" />
+<figcaption>The IV curve of an output of the 74HC595 shift register IC when all outputs are equally loaded.<div class="m-figure-description">
+In this figure, I put the voltage of the output on the vertical axis since we are interested in how the output voltage drops when we draw more current from the IC.
+This plot shows the current per pin, which is 1/8 of the total current.</div>
+</figcaption>
+</figure>
+<p>The output IV curve of the 74HC595 exhibits a linear relation.
+The initial drop to 4.95V is due to the voltage drop across the wires that connects the power supply to the breadboard.
+Then, the 74HC595 has an output resistance of 31Ω and the output voltage drops linearly with the current.</p>
+<p>I also decided to do the same measurement as last time for comparison.
+That is, drawing current from only one output on the 74HC595.</p>
+<figure class="m-figure">
+<img src="/data/74hc595-testing-2/single_iv.webp" />
+<figcaption>The IV curve of an output of the 74HC595 shift register IC when only one output is loaded.<div class="m-figure-description">
+This plot shows the total current on the only one loaded pin.</div>
+</figcaption>
+</figure>
+<p>Initially, the output voltage also drops linearly with an output resistance of around 30Ω.
+Then, the voltage starts to drop sharply after drawing 50mA of current.</p>
+</section>
+<section id="references">
+<h2>References</h2>
+<ul>
+<li><a href="https://www.ti.com/lit/ds/symlink/sn74hc595.pdf">74HC595 datasheet</a></li>
+<li><a href="https://www.holtek.com/webapi/116711/HT92632_52v120.pdf">HT92632 datasheet</a></li>
+</ul>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2026-02-28T00:00:00+08:00">Sat 28 February 2026</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-03-06T00:00:00+08:00">Fri 06 March 2026</time></span></p>
+      </footer>
+    </article>
+<!--     <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="/Blog/">Blog</a></li>
+        <li><a href="/Product/">Product</a></li>
+      </ol>
+      <h3>Tag cloud</h3>
+      <ul class="m-tagcloud">
+        <li class="m-tag-2"><a href="/tag/8-bit.html">8-bit</a></li>
+        <li class="m-tag-2"><a href="/tag/adc.html">ADC</a></li>
+        <li class="m-tag-2"><a href="/tag/ads1115.html">ADS1115</a></li>
+        <li class="m-tag-3"><a href="/tag/arduino.html">Arduino</a></li>
+        <li class="m-tag-5"><a href="/tag/breadboard.html">Breadboard</a></li>
+        <li class="m-tag-2"><a href="/tag/display.html">Display</a></li>
+        <li class="m-tag-2"><a href="/tag/drv8825.html">DRV8825</a></li>
+        <li class="m-tag-2"><a href="/tag/efuse.html">eFuse</a></li>
+        <li class="m-tag-2"><a href="/tag/flash.html">Flash</a></li>
+        <li class="m-tag-2"><a href="/tag/fpga.html">FPGA</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-effect.html">Hall Effect</a></li>
+        <li class="m-tag-2"><a href="/tag/hexadecimal.html">Hexadecimal</a></li>
+        <li class="m-tag-2"><a href="/tag/kicad.html">Kicad</a></li>
+        <li class="m-tag-2"><a href="/tag/openocd.html">OpenOCD</a></li>
+        <li class="m-tag-2"><a href="/tag/overcurrent-protection.html">Overcurrent Protection</a></li>
+        <li class="m-tag-2"><a href="/tag/pmod.html">PMOD</a></li>
+        <li class="m-tag-2"><a href="/tag/power-supply.html">Power Supply</a></li>
+        <li class="m-tag-2"><a href="/tag/raspberry-pi-pico.html">Raspberry Pi Pico</a></li>
+        <li class="m-tag-2"><a href="/tag/register.html">Register</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2040.html">RP2040</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2350.html">RP2350</a></li>
+        <li class="m-tag-2"><a href="/tag/sensor.html">Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/serial-wire-debug.html">Serial Wire Debug</a></li>
+        <li class="m-tag-2"><a href="/tag/simulation.html">Simulation</a></li>
+        <li class="m-tag-2"><a href="/tag/spice.html">SPICE</a></li>
+        <li class="m-tag-2"><a href="/tag/st7735.html">ST7735</a></li>
+        <li class="m-tag-2"><a href="/tag/stepper-motor.html">Stepper Motor</a></li>
+        <li class="m-tag-4"><a href="/tag/stm32.html">STM32</a></li>
+        <li class="m-tag-2"><a href="/tag/swd.html">SWD</a></li>
+        <li class="m-tag-2"><a href="/tag/timer.html">Timer</a></li>
+        <li class="m-tag-2"><a href="/tag/tmag5170.html">TMAG5170</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+ -->
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>light655. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
