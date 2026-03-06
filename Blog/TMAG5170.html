@@ -12,8 +12,8 @@
   <meta property="og:title" content="TMAG5170 3D Hall-effect sensor" />
   <meta name="twitter:title" content="TMAG5170 3D Hall-effect sensor" />
   <meta property="og:url" content="/Blog/TMAG5170.html" />
-  <meta property="og:description" content="TMAG5170 is a 3-axis precision Hall effect sensor designed by Texas Instruments. On top of the Hall effect sensor, there is a temperature sensor and angle calculator intergrated in the IC. The functions of the IC can be interfaced with SPI. There are two variant of this IC, A1 and A2, the two variants differ in measuring range." />
-  <meta name="twitter:description" content="TMAG5170 is a 3-axis precision Hall effect sensor designed by Texas Instruments. On top of the Hall effect sensor, there is a temperature sensor and angle calculator intergrated in the IC. The functions of the IC can be interfaced with SPI. There are two variant of this IC, A1 and A2, the two variants differ in measuring range." />
+  <meta property="og:description" content="TMAG5170 is a 3-axis precision Hall effect sensor designed by Texas Instruments. On top of the Hall effect sensor, there is a temperature sensor and angle calculator integrated in the IC. The functions of the IC can be interfaced with SPI. There are two variant of this IC, A1 and A2, the two variants differ in measuring range." />
+  <meta name="twitter:description" content="TMAG5170 is a 3-axis precision Hall effect sensor designed by Texas Instruments. On top of the Hall effect sensor, there is a temperature sensor and angle calculator integrated in the IC. The functions of the IC can be interfaced with SPI. There are two variant of this IC, A1 and A2, the two variants differ in measuring range." />
   <meta name="twitter:card" content="summary" />
   <meta property="og:type" content="article" />
 </head>
@@ -96,7 +96,7 @@ The definition of the data bits are as follow:</p>
 <img alt="TMAG5170 SDI frame" src="/data/TMAG5170/TMAG5170-SDI.png" />
 <figcaption>TMAG5170 SDI frame. (Source: Texas Instruments)</figcaption>
 </figure>
-<p>The most significant bit determines whethere the command is a write(0) or read(1).
+<p>The most significant bit determines whether the command is a write(0) or read(1).
 The rest of the most significant byte is the address of the register to read from or write to.
 The middle 2 bytes are the data bits to write into the register.
 The upper nibble of the last byte is the command bits, which can be used to start a new conversion after the nCS line goes high.</p>
@@ -141,7 +141,7 @@ x^4+x+1
 <img alt="TMAG5170 CRC polynomial" src="/data/TMAG5170/TMAG5170-CRC.png" />
 <figcaption>TMAG5170 CRC polynomial.</figcaption>
 </figure>
-<p>The 4 register will be initalised with the inital value 0b1111 and the 28 data bits will first be appended with 0's to 32 bits.
+<p>The 4 register will be initialised with the initial value 0b1111 and the 28 data bits will first be appended with 0's to 32 bits.
 After we shift all 32 bits into the shift register, the value in the 4 registers will be the CRC.
 The following listing shows the shift register implementation for CRC generation.
 The CRC can also be generated with 4 XOR functions shown in the datasheet.</p>
