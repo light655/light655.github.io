@@ -83,7 +83,7 @@ Why was this a bug?
 Because the C standard only specified the &quot;int&quot; to be at least 16 bits wide.
 Although most devices (including the Pico) have 32-bit &quot;int&quot; nowadays, the Arduino Uno has 16-bit &quot;int&quot;.
 Therefore, I was expecting the <code class="m-code"><span class="n">buadrate</span></code> parameter to hold a 32-bit value but it wasn't.
-In the example, I set the SPI baudrate to 1MHz, which can be fitted into a 32-bit &quot;int&quot; but not a 16-bit &quot;int&quot;.
+In the example, I set the SPI baud rate to 1MHz, which can be fitted into a 32-bit &quot;int&quot; but not a 16-bit &quot;int&quot;.
 The most significant 16 bits are truncated, leaving the final value of 16960 Hz.
 This explains why the code was running much slower than I expected.</p>
 <p>To solve this issue, I changed the type into &quot;uint32_t&quot;.
@@ -225,6 +225,16 @@ V_{actual} = (3.25 / 4096) \times N_{measured}
 <use x='162.202368' y='1.793263' xlink:href='#eq2-g1-100'/>
 </g>
 </svg> instead.</p>
+</section>
+<section id="section-4">
+<h2>(2026/03/15)</h2>
+<p>I usually program the Raspberry Pi microcontrollers (RP2040 and RP2350) with Pico-SDK.
+To use Pico-SDK, we need to setup a CMake project.
+In every Pico-SDK project, we must include the <em>pico_sdk_import.cmake</em> file.
+In most tutorials, including the official ones, they suggest to copy this file from the SDK to the project folder.
+However, there is a way to point CMake to the file in the SDK without copying, provided that the <strong>PICO_SDK_PATH</strong> environment variable is set.
+All we need to do is change the import line in <strong>CMakeLists.txt</strong>.</p>
+<pre class="m-code"><span class="nb">include</span><span class="p">(</span><span class="o">$ENV{</span><span class="nv">PICO_SDK_PATH</span><span class="o">}</span><span class="s">/external/pico_sdk_import.cmake</span><span class="p">)</span></pre>
 </section>
 <!-- /content -->
       </div>
