@@ -12,8 +12,8 @@
   <meta property="og:title" content="SPICE simulation with Kicad" />
   <meta name="twitter:title" content="SPICE simulation with Kicad" />
   <meta property="og:url" content="/Blog/kicad-spice.html" />
-  <meta property="og:description" content="Kicad is an open-source electronics design suite, mainly used in PCB design. It also has built-in Ngspice simulator to simulator circuit behaviours. In this airticle, we will go through the basic setup of SPICE simulation in Kicad and how to find extra SPICE models." />
-  <meta name="twitter:description" content="Kicad is an open-source electronics design suite, mainly used in PCB design. It also has built-in Ngspice simulator to simulator circuit behaviours. In this airticle, we will go through the basic setup of SPICE simulation in Kicad and how to find extra SPICE models." />
+  <meta property="og:description" content="Kicad is an open-source electronics design suite, mainly used in PCB design. It also has built-in Ngspice simulator to simulator circuit behaviours. In this article, we will go through the basic setup of SPICE simulation in Kicad and how to find extra SPICE models." />
+  <meta name="twitter:description" content="Kicad is an open-source electronics design suite, mainly used in PCB design. It also has built-in Ngspice simulator to simulator circuit behaviours. In this article, we will go through the basic setup of SPICE simulation in Kicad and how to find extra SPICE models." />
   <meta name="twitter:card" content="summary" />
   <meta property="og:type" content="article" />
 </head>
@@ -52,7 +52,7 @@
         </a></h1>
         <p>Kicad is an open-source electronics design suite, mainly used in PCB design.
         It also has built-in Ngspice simulator to simulator circuit behaviours.
-        In this airticle, we will go through the basic setup of SPICE simulation in Kicad and how to find extra SPICE models.</p>
+        In this article, we will go through the basic setup of SPICE simulation in Kicad and how to find extra SPICE models.</p>
       </header>
       <div class="m-clearfix-l"></div>
 <!-- content -->
@@ -71,19 +71,19 @@ First, search &quot;spice&quot; in the symbol selector to find the voltage sourc
 <img alt="SPICE voltage sources in Kicad." class="m-image" src="/data/kicad-spice/kicad-spice-vsource.png" />
 <p>There are numerous options for voltage source.
 For the power supply we'll use &quot;VDC&quot; and for the input signal we'll use &quot;VSIN&quot;.
-To configure the voltage, just put the voltage values in the componenet value field.
+To configure the voltage, just put the voltage values in the component value field.
 The sinusoidal voltage can be configured by following the parameters on the component.</p>
 </section>
 <section id="component-models">
 <h2>Component models</h2>
-<p>Unforturnately, Kicad doesn't have built-in component models for semiconductor devices.
+<p>Unfortunately, Kicad doesn't have built-in component models for semiconductor devices.
 You can either configure the components yourself or find the component models online.
 Some manufacturers will have the SPICE model for their transistors and opamps available for download.</p>
 <p>However, there is an easier way to find component models.
 There is a <a href="https://github.com/kicad-spice-library/KiCad-Spice-Library">repository on Github</a> that collected lots of SPICE models.
 Clone the repository and run <code class="m-code">Scripts/check_supported.py</code> with python.
 You can search for the component you want with this script.</p>
-<img alt="Search for compenent in the github repository with Scripts/check_supported.py" class="m-image" src="/data/kicad-spice/kicad-spice-search.png" />
+<img alt="Search for component in the github repository with Scripts/check_supported.py" class="m-image" src="/data/kicad-spice/kicad-spice-search.png" />
 <p>Typically, the script will return multiple results.
 Pick one and go to the file.
 With your text editor, copy the corresponding model into another file and save it under the Kicad project.</p>
@@ -113,12 +113,12 @@ Please see <a href="https://forum.kicad.info/t/ngspice-op-dc-analysis-gotcha-wit
 <p>Next, let's run <em>.tran</em> to simulate the time domain behaviour of this circuit.</p>
 <img class="m-image" src="/data/kicad-spice/kicad-spice-tran.png" />
 <img class="m-image" src="/data/kicad-spice/kicad-spice-tran-1.png" />
-<p>Set appropiate time step and simulation length for your circuit.
+<p>Set appropriate time step and simulation length for your circuit.
 Click OK and then click run, and the simulation result will show in the simulator.</p>
 <img class="m-image" src="/data/kicad-spice/kicad-spice-tran-2.png" />
 <p>Remember to check the &quot;plot&quot; checkbox so that he signal will show on the plot.</p>
 <p>There are several other kinds of simulation that Kicad can do, such as <em>.ac</em> to find the Bode plot and <em>.dc</em> to do DC sweep.
-Just play around and find the best simulation option for youself!</p>
+Just play around and find the best simulation option for yourself!</p>
 </section>
 <!-- /content -->
       <footer>
@@ -143,7 +143,9 @@ Just play around and find the best simulation option for youself!</p>
         <li class="m-tag-2"><a href="/tag/efuse.html">eFuse</a></li>
         <li class="m-tag-2"><a href="/tag/flash.html">Flash</a></li>
         <li class="m-tag-2"><a href="/tag/fpga.html">FPGA</a></li>
+        <li class="m-tag-2"><a href="/tag/gauss-meter.html">Gauss Meter</a></li>
         <li class="m-tag-2"><a href="/tag/hall-effect.html">Hall Effect</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-sensor.html">Hall Sensor</a></li>
         <li class="m-tag-2"><a href="/tag/hexadecimal.html">Hexadecimal</a></li>
         <li class="m-tag-2"><a href="/tag/kicad.html">Kicad</a></li>
         <li class="m-tag-2"><a href="/tag/openocd.html">OpenOCD</a></li>
@@ -163,7 +165,7 @@ Just play around and find the best simulation option for youself!</p>
         <li class="m-tag-4"><a href="/tag/stm32.html">STM32</a></li>
         <li class="m-tag-2"><a href="/tag/swd.html">SWD</a></li>
         <li class="m-tag-2"><a href="/tag/timer.html">Timer</a></li>
-        <li class="m-tag-2"><a href="/tag/tmag5170.html">TMAG5170</a></li>
+        <li class="m-tag-3"><a href="/tag/tmag5170.html">TMAG5170</a></li>
       </ul>
     </nav>
   </div>
