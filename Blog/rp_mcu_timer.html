@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <title>How to execute code regularly with timer on Raspberry Pi Pico? | light655</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="/static/m-dark.css" />
+  <link rel="canonical" href="/Blog/rp_mcu_timer.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#cb4b16" />
+  <meta property="og:site_name" content="light655" />
+  <meta property="og:title" content="How to execute code regularly with timer on Raspberry Pi Pico?" />
+  <meta name="twitter:title" content="How to execute code regularly with timer on Raspberry Pi Pico?" />
+  <meta property="og:url" content="/Blog/rp_mcu_timer.html" />
+  <meta property="og:description" content="In MCU projects, we often need to execute a piece of code regularly. For example, reading a sensor every few milliseconds or toggling an LED every second. Naively, we will use delay to achieve this effect. When there are multiple things going on the project with different periods, it becomes hard to manage with delay. Furthermore, delay blocks the CPU and we cannot perform other tasks during the delay. This is where timer comes in handy. We can achieve precise timing without blocking the CPU. In this blog, I will go through the basics of using pico_time API on the Raspberry Pi Pico to execute code regularly." />
+  <meta name="twitter:description" content="In MCU projects, we often need to execute a piece of code regularly. For example, reading a sensor every few milliseconds or toggling an LED every second. Naively, we will use delay to achieve this effect. When there are multiple things going on the project with different periods, it becomes hard to manage with delay. Furthermore, delay blocks the CPU and we cannot perform other tasks during the delay. This is where timer comes in handy. We can achieve precise timing without blocking the CPU. In this blog, I will go through the basics of using pico_time API on the Raspberry Pi Pico to execute code regularly." />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="/" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">light655</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="/blab.html">Blab</a></li>
+            <li><a href="/Blog/">Blog</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="/docs/">Documentation</a></li>
+            <li><a href="/Product/">Product</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="/Blog/rp_mcu_timer.html" rel="bookmark" title="Permalink to How to execute code regularly with timer on Raspberry Pi Pico?">
+          <time class="m-date" datetime="2026-04-05T00:00:00+08:00">
+            Apr <span class="m-date-day">05</span> 2026
+          </time>
+          How to execute code regularly with timer on Raspberry Pi Pico?
+        </a></h1>
+        <p>In MCU projects, we often need to execute a piece of code regularly.
+        For example, reading a sensor every few milliseconds or toggling an LED every second.
+        Naively, we will use delay to achieve this effect.
+        When there are multiple things going on the project with different periods, it becomes hard to manage with delay.
+        Furthermore, delay blocks the CPU and we cannot perform other tasks during the delay.
+        This is where timer comes in handy.
+        We can achieve precise timing without blocking the CPU.
+        In this blog, I will go through the basics of using pico_time API on the Raspberry Pi Pico to execute code regularly.</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<img class="m-image" src="/data/rp_mcu_timer/thumbnail.webp" />
+<section id="why-timer">
+<h2>Why timer?</h2>
+<p>Let's assume we are building a vending machine.
+We need to measure the refrigerator temperature every 20 seconds,
+and we also need to connect to the server to perform checks every 30 seconds.
+Naively, we might implement a 10 second delay and count the number of delays.
+If it is a multiple of 2, measure the temperature.
+It it is a multiple of 3, connect to the server.</p>
+<pre class="m-code"><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">sleep_ms</span><span class="p">(</span><span class="mi">10000</span><span class="p">);</span><span class="w">    </span><span class="c1">// equivalent to delay() in Arduino</span>
+<span class="w">    </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">measure_temperature</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">connect_to_server</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span></pre>
+<p>This naive implementation poses a few problems.</p>
+<ol>
+<li>Delay blocks the CPU.
+Other tasks cannot be performed while the CPU sits there doing nothing.</li>
+<li>The interval between execution will be slightly longer than the delay.
+Suppose the <code class="m-code"><span class="n">connect_to_server</span><span class="p">()</span></code> function takes 2 seconds to run.
+Then, the loop will actually take 12 seconds to run and the interval between two measurements of temperature will be 22 seconds.</li>
+<li>The management of the loop becomes difficult.
+Suppose we want to perform another task every 27 seconds.
+Then, we need to modify the count for every other task and the delay length.</li>
+</ol>
+<p>To solve these problems, we typically use the hardware timer to generate interrupts and execute code after a set period.
+On the Raspberry Pi Pico, we can utilise the pico_time API in the Raspberry Pi pico-sdk.
+This API manages the hardware timer and we can set it to trigger with multiple different periods.</p>
+</section>
+<section id="the-pico-time-api-on-raspberry-pi-mcus">
+<h2>The pico_time API on Raspberry Pi MCUs.</h2>
+<p>On MCUs, there is a circuit called timer.
+It is a counter that increments every clock cycle.
+We can set a target value at which it will reset and generate an interrupt.
+Then, we can trigger the execution of some code with the interrupt service routine.</p>
+<p>On Raspberry Pi MCUs, there is a special counter that increments every one microsecond called the system timer.
+It is a 64-bit counter which won't overflow until thousands of years later.
+The pico_time API is a high level API that manages this hardware on the MCUs.
+In this blog, we are going to explore how to set a repeating timer with this API.</p>
+<p>Raspberry Pi MCUs does things a bit differently to typical MCUs.
+Instead of setting multiple hardware timers to generate interrupts at different rates,
+it triggers all interrupts from this system timer and it doesn't reset.
+The pico_time API manages this timer and set the target at which it triggers on the go.</p>
+<img class="m-image" src="/data/rp_mcu_timer/timer_comparison.webp" />
+</section>
+<section id="how-to-execute-code-regularly">
+<h2>How to execute code regularly?</h2>
+<p>To make sure you can run the example on your Pico without any additional hardware,
+we will toggle an LED every 2 seconds and print some text over USB every 3 seconds instead.
+First, we need to include <code class="m-code"><span class="n">pico</span><span class="o">/</span><span class="n">stdlib</span><span class="p">.</span><span class="n">h</span></code> for the pico_time API.</p>
+<pre class="m-code"><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;pico/stdlib.h&quot;</span></pre>
+<p>Next, we need to write a callback function, which will be called when the timer interrupt triggers.
+We are going to use two timers, so we need two callback functions.</p>
+<aside class="m-note m-danger">
+<h3>Don't put blocking code in the ISR.</h3>
+<p>The callback function should not contain any blocking code, as it is part of the interrupt service routine.
+Avoid prints, blocking communication and <strong>delay</strong>.</p>
+</aside>
+<p>We shouldn't put blocking code such as print statements in the callback function.
+Therefore, we need to set a flag and print from the main function.
+This is because blocking an ISR may lead to the processor missing other ISRs.</p>
+<pre class="m-code"><span class="k">volatile</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">print_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="nf">blink_timer_callback</span><span class="p">(</span><span class="n">__unused</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">repeating_timer</span><span class="w"> </span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">gpio_xor_mask</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">LED_PIN</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="nf">print_timer_callback</span><span class="p">(</span><span class="n">__unused</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">repeating_timer</span><span class="w"> </span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">print_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span></pre>
+<p>In the <code class="m-code"><span class="n">main</span><span class="p">()</span></code> function, we need to first setup the two timers.
+We need to set the interval and the callback function.
+We can also pass arguments into the callback function optionally, but we are not doing that in this example.</p>
+<pre class="m-code"><span class="k">struct</span><span class="w"> </span><span class="nc">repeating_timer</span><span class="w"> </span><span class="n">blink_timer</span><span class="p">;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">repeating_timer</span><span class="w"> </span><span class="n">print_timer</span><span class="p">;</span>
+<span class="n">add_repeating_timer_ms</span><span class="p">(</span><span class="mi">-2000</span><span class="p">,</span><span class="w"> </span><span class="n">blink_timer_callback</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">blink_timer</span><span class="p">);</span>
+<span class="n">add_repeating_timer_ms</span><span class="p">(</span><span class="mi">-3000</span><span class="p">,</span><span class="w"> </span><span class="n">print_timer_callback</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">print_timer</span><span class="p">);</span></pre>
+<p>In the code snippet above, you can find that the interval is set to a negative value.
+For the pico_time API, positive and negative value of interval means two different modes of timing.
+If the interval is positive, then it means the time between the last <em>return</em> and this <em>call</em> of the callback function.
+If the interval is negative, then it means the time between the last <em>call</em> and this <em>call</em> of the callback function.
+It won't have much difference when the interval is long compared to the time that it takes for the function to execute.
+However, if the desired interval is a few milliseconds, then the difference will be noticeable.</p>
+<img class="m-image" src="/data/rp_mcu_timer/interval.webp" />
+<p>We still need to handle the printing in the main loop.
+To print after the timer triggered, we need to check the value of the flag variable.
+If it is true, print and reset the flag.</p>
+<pre class="m-code"><span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">print_flag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">puts</span><span class="p">(</span><span class="s">&quot;Printing something every 3 seconds.&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">print_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span></pre>
+<p>With these settings, your Pico should be able to toggle an LED every 2 seconds and print something over USB every 3 seconds.
+You can download the source code of this example <a href="/data/rp_mcu_timer/blinky_timer.zip">here</a>.</p>
+</section>
+<section id="references">
+<h2>References</h2>
+<ul>
+<li><a href="https://pip-assets.raspberrypi.com/categories/814-rp2040/documents/RP-008371-DS-1-rp2040-datasheet.pdf?disposition=inline">RP2040 datasheet</a>.
+The documentation of the system timer is in section 4.6.</li>
+<li><a href="https://www.raspberrypi.com/documentation/pico-sdk/high_level.html#group_repeating_timer">Pico SDK documentation</a>.
+You can find the reference for other functions in the pico_time API, such as cancelling a timer an setting a microsecond timer.</li>
+<li><a href="https://github.com/raspberrypi/pico-examples/blob/master/timer/hello_timer/hello_timer.c">Official Pico SDK timer example</a>.
+You can find examples of other functions in the pico_time API.</li>
+</ul>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2026-04-05T00:00:00+08:00">Sun 05 April 2026</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-04-05T00:00:00+08:00">Sun 05 April 2026</time></span></p>
+      </footer>
+    </article>
+<!--     <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="/Blog/">Blog</a></li>
+        <li><a href="/Product/">Product</a></li>
+      </ol>
+      <h3>Tag cloud</h3>
+      <ul class="m-tagcloud">
+        <li class="m-tag-2"><a href="/tag/8-bit.html">8-bit</a></li>
+        <li class="m-tag-2"><a href="/tag/adc.html">ADC</a></li>
+        <li class="m-tag-2"><a href="/tag/ads1115.html">ADS1115</a></li>
+        <li class="m-tag-3"><a href="/tag/arduino.html">Arduino</a></li>
+        <li class="m-tag-5"><a href="/tag/breadboard.html">Breadboard</a></li>
+        <li class="m-tag-2"><a href="/tag/display.html">Display</a></li>
+        <li class="m-tag-2"><a href="/tag/drv8825.html">DRV8825</a></li>
+        <li class="m-tag-2"><a href="/tag/efuse.html">eFuse</a></li>
+        <li class="m-tag-2"><a href="/tag/flash.html">Flash</a></li>
+        <li class="m-tag-2"><a href="/tag/fpga.html">FPGA</a></li>
+        <li class="m-tag-2"><a href="/tag/gauss-meter.html">Gauss Meter</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-effect.html">Hall Effect</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-sensor.html">Hall Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/hexadecimal.html">Hexadecimal</a></li>
+        <li class="m-tag-2"><a href="/tag/kicad.html">Kicad</a></li>
+        <li class="m-tag-2"><a href="/tag/openocd.html">OpenOCD</a></li>
+        <li class="m-tag-2"><a href="/tag/overcurrent-protection.html">Overcurrent Protection</a></li>
+        <li class="m-tag-2"><a href="/tag/pmod.html">PMOD</a></li>
+        <li class="m-tag-2"><a href="/tag/power-supply.html">Power Supply</a></li>
+        <li class="m-tag-2"><a href="/tag/raspberry-pi-pico.html">Raspberry Pi Pico</a></li>
+        <li class="m-tag-2"><a href="/tag/register.html">Register</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2040.html">RP2040</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2350.html">RP2350</a></li>
+        <li class="m-tag-2"><a href="/tag/sensor.html">Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/serial-wire-debug.html">Serial Wire Debug</a></li>
+        <li class="m-tag-2"><a href="/tag/simulation.html">Simulation</a></li>
+        <li class="m-tag-2"><a href="/tag/spice.html">SPICE</a></li>
+        <li class="m-tag-2"><a href="/tag/st7735.html">ST7735</a></li>
+        <li class="m-tag-2"><a href="/tag/stepper-motor.html">Stepper Motor</a></li>
+        <li class="m-tag-4"><a href="/tag/stm32.html">STM32</a></li>
+        <li class="m-tag-2"><a href="/tag/swd.html">SWD</a></li>
+        <li class="m-tag-2"><a href="/tag/timer.html">Timer</a></li>
+        <li class="m-tag-3"><a href="/tag/tmag5170.html">TMAG5170</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+ -->
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>light655. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
