@@ -78,11 +78,11 @@ Then, I port the new code into the Arduino library and test them.</p>
 I found that the very similar code running on the Arduino Uno is much slower than on the Pi Pico.
 I know that there is large performance difference between the two microcontrollers, but that code was running way slower than anticipated.</p>
 <p>It turned out that the <code class="m-code"><span class="n">attachSPI</span><span class="p">()</span></code> function had a bug inside that I didn't spot when I first ported the library.
-The bug was: the parameter <code class="m-code"><span class="n">buadrate</span></code> was an &quot;int&quot;.
+The bug was: the parameter <code class="m-code"><span class="n">baudrate</span></code> was an &quot;int&quot;.
 Why was this a bug?
 Because the C standard only specified the &quot;int&quot; to be at least 16 bits wide.
 Although most devices (including the Pico) have 32-bit &quot;int&quot; nowadays, the Arduino Uno has 16-bit &quot;int&quot;.
-Therefore, I was expecting the <code class="m-code"><span class="n">buadrate</span></code> parameter to hold a 32-bit value but it wasn't.
+Therefore, I was expecting the <code class="m-code"><span class="n">baudrate</span></code> parameter to hold a 32-bit value but it wasn't.
 In the example, I set the SPI baud rate to 1MHz, which can be fitted into a 32-bit &quot;int&quot; but not a 16-bit &quot;int&quot;.
 The most significant 16 bits are truncated, leaving the final value of 16960 Hz.
 This explains why the code was running much slower than I expected.</p>
@@ -235,6 +235,23 @@ In most tutorials, including the official ones, they suggest to copy this file f
 However, there is a way to point CMake to the file in the SDK without copying, provided that the <strong>PICO_SDK_PATH</strong> environment variable is set.
 All we need to do is change the import line in <strong>CMakeLists.txt</strong>.</p>
 <pre class="m-code"><span class="nb">include</span><span class="p">(</span><span class="o">$ENV{</span><span class="nv">PICO_SDK_PATH</span><span class="o">}</span><span class="s">/external/pico_sdk_import.cmake</span><span class="p">)</span></pre>
+</section>
+<section id="section-5">
+<h2>(2026/04/28)</h2>
+<p>I am talking about Pico-SDK again.
+One of the nice part of Pico-SDK is how easy it is to print stuff over UART or USB.
+We can directly use the <code class="m-code"><span class="n">printf</span><span class="p">()</span></code> function, just like on a desktop computer.</p>
+<p>I am working on testing <a href="https://implementation.ee.nthu.edu.tw/competition/groups/1fde149f-6727-4c55-bb5f-cb5212f96230/attachments/poster?download=0">my gate driver IC</a> today.
+I use a Pico to control the input of the gate driver, and the Pico is controlled by a Python script on my laptop.
+After the test pattern is completed, the Pico prints some text over USB and I wrote the Python script to check whether it finished successfully.
+In the Pico's C program, I use <code class="m-code"><span class="n">printf</span><span class="p">(</span><span class="s">&quot;d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span></code> to print this message.
+In the Python script, I use <code class="m-code"><span class="n">bytes_read</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;d</span><span class="se">\n</span><span class="s2">&quot;</span></code> to check whether the test pattern was successfully finished.</p>
+<p>I traced the two programs from the start and after an afternoon of debugging,
+I found that the message received by the Python script alternates between <code class="m-code"><span class="sa">b</span><span class="s2">&quot;d</span><span class="se">\r</span><span class="s2">&quot;</span></code>, <code class="m-code"><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">d&quot;</span></code> and <code class="m-code"><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span></code>.
+A carriage return character was inserted before the newline character.</p>
+<p>It turns out that the Pico-SDK by default replaces <code class="m-code"><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span></code> with <code class="m-code"><span class="s">&quot;</span><span class="se">\r\n</span><span class="s">&quot;</span></code> so that it displays better in the terminal.
+<a href="https://forums.raspberrypi.com/viewtopic.php?t=358887">Source</a>.
+Although this behaviour can be disabled, I modified by Python script to check for <code class="m-code"><span class="n">bytes_read</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;d</span><span class="se">\r\n</span><span class="s2">&quot;</span></code> instead.</p>
 </section>
 <!-- /content -->
       </div>
