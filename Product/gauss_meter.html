@@ -55,19 +55,32 @@
 <!-- content -->
 <p>This project is a USB 3D-Gauss Meter based on Texas Instrument's TMAG5170 Hall Sensor.
 The Gauss Meter is powered by an STM32, which sends the measured data through USB.
-There is a Python GUI client to show and log the measurements on your computer screen.</p>
-<img class="m-image" src="/data/gauss_meter/cover.webp" />
+There is a Python GUI client to show and log the measurements on your computer screen.
+All of the hardware design, firmware and Python client source code are available on <a href="https://github.com/light655/USB-3D-Gauss-Meter/">Github</a>.
+A setup and demo video is available <a href="https://www.youtube.com/watch?v=kCA1quN0qew">here</a>.</p>
+<img class="m-image" src="/data/gauss_meter/cover_new.webp" />
 <section id="python-gui-client-setup">
 <h2>Python GUI client setup</h2>
-<p>First of all, you can download all the design files and the STM32 firmware and Python GUI client from <a href="https://github.com/light655/USB-3D-Gauss-Meter/">Github</a>.</p>
-<pre class="m-code">git<span class="w"> </span>clone<span class="w"> </span>https://github.com/light655/USB-3D-Gauss-Meter.git</pre>
+<section id="for-users-with-python-installed-on-their-computers">
+<h3>For users with Python installed on their computers:</h3>
+<p>The Python script of the Python GUI client can be downloaded from the <a href="https://github.com/light655/USB-3D-Gauss-Meter/releases/tag/v2.0.0">Github Release Page</a>.
+The <code class="m-code">gauss-meter-python-gui-client-v2.0.0.zip</code> file contains the Python script and the list of required packages.
+This is intended for users who have Python already installed on their computers.</p>
 <p>The Python GUI client requires Pyside6 and pyserial packages to run.
 You can install them with pip.</p>
-<pre class="m-code">pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>python-client/requirements.txt</pre>
-<p>Then, you can run the Python script to start the GUI client.
-There are currently two versions of firmware and Python GUI client.
-Please use version two.</p>
-<pre class="m-code">python3<span class="w"> </span>python-client/gauss-meter-v2.py</pre>
+<pre class="m-code">pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt</pre>
+<p>Then, you can run the Python script to start the GUI client.</p>
+<pre class="m-code">python3<span class="w"> </span>gauss-meter-v2.py</pre>
+</section>
+<section id="for-windows-users-without-python">
+<h3>For Windows users without Python:</h3>
+<p>I compiled the Python GUI client with <a href="https://nuitka.net/">Nuitka</a> for Windows x86 systems.
+The compiled binaries can be downloaded from the <a href="https://github.com/light655/USB-3D-Gauss-Meter/releases/tag/v2.0.0">Github Release Page</a>.
+The <code class="m-code">gauss-meter-windows-compiled-v2.0.0.zip</code> file contains the compiled binaries for Windows x86 systems.
+This is intended for users who does not have Python on their computers.</p>
+<p>Unzip the downloaded file and you can find <code class="m-code">gauss-meter-v2.exe</code>.
+Run this file to run the Python GUI client.</p>
+</section>
 </section>
 <section id="python-gui-client-usage">
 <h2>Python GUI client usage</h2>
@@ -111,11 +124,17 @@ This way, you can insert pin headers without soldering.</p>
 <img src="/data/gauss_meter/upload_setup.webp" />
 <figcaption>The connection for uploading firmware to the STM32 on the USB 3D Gauss Meter.<div class="m-figure-description">
 In my setup, I used a Raspberry Pi Pico 2 with the Picoprobe firmware to upload the compiled binaries to the STM32.
-I power the USB 3D Gauss Meter from the USB type C port, so the 3.3V pin the debug headers are not connected.</div>
+I power the USB 3D Gauss Meter from the USB type C port, so the 3.3V pin on the debug headers is not connected.</div>
 </figcaption>
 </figure>
 <p>The current firmware cannot run at the maximum speed of the TMAG5170 Hall effect sensor.
 I suspect this is due to the use of C++ in the firmware.</p>
+</section>
+<section id="downloads">
+<h2>Downloads</h2>
+<ul>
+<li><a href="/data/gauss_meter/gauss_meter_datasheet.pdf">Datasheet</a></li>
+</ul>
 </section>
 <section id="links">
 <h2>Links</h2>
