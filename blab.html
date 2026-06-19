@@ -253,6 +253,20 @@ A carriage return character was inserted before the newline character.</p>
 <a href="https://forums.raspberrypi.com/viewtopic.php?t=358887">Source</a>.
 Although this behaviour can be disabled, I modified by Python script to check for <code class="m-code"><span class="n">bytes_read</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;d</span><span class="se">\r\n</span><span class="s2">&quot;</span></code> instead.</p>
 </section>
+<section id="section-6">
+<h2>(2026/06/19)</h2>
+<p>I got screwed by a counterfeit TL082 opamp.
+I was building a current sense amplifier and I needed an opamp with high slew rate.
+As I was testing the amplifier, I found that the output cannot catch up with the input.
+So, I decided to measure the slew rate of the opamp.</p>
+<p>I connect the opamp as a voltage follower and powered it with ±15V.
+I feed the input with a 1kHz, 1Vpp square wave from my Analog Discovery 3 and measured the output.
+It turns out instead of the 13V/us on the datasheet, I got 0.58V/us.</p>
+<img class="m-image" src="/data/fake_tl082/fake_tl082.webp" />
+<p>The <a href="https://www.eevblog.com/forum/projects/counterfeit-tl082/">folks on EEVblog forum</a> figured out that it should be an LM358 disguised as a TL082.
+I never thought I would be scammed by such a jellybean part.
+Now, I need to buy a proper high slew rate opamp.</p>
+</section>
 <!-- /content -->
       </div>
     </div>
