@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <title>Setting up VSCode for debugging STM32H755ZI dual-core microcontroller. | light655</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="/static/m-dark.css" />
+  <link rel="canonical" href="/Blog/stm32h755zi_debug.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#cb4b16" />
+  <meta property="og:site_name" content="light655" />
+  <meta property="og:title" content="Setting up VSCode for debugging STM32H755ZI dual-core microcontroller." />
+  <meta name="twitter:title" content="Setting up VSCode for debugging STM32H755ZI dual-core microcontroller." />
+  <meta property="og:url" content="/Blog/stm32h755zi_debug.html" />
+  <meta property="og:description" content="Debugging a dual-core STM32 microcontroller requires some effort to setup. In this article, I will briefly go over the process of setting up VSCode (with STM32Cube Extensions) to debug a dual-core STM32H755ZI microcontroller. The development board that I am using is the Nucleo-H755ZI, which has a built-in STLINK V3. I will focus on the problems that I ran into and the solutions to them." />
+  <meta name="twitter:description" content="Debugging a dual-core STM32 microcontroller requires some effort to setup. In this article, I will briefly go over the process of setting up VSCode (with STM32Cube Extensions) to debug a dual-core STM32H755ZI microcontroller. The development board that I am using is the Nucleo-H755ZI, which has a built-in STLINK V3. I will focus on the problems that I ran into and the solutions to them." />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="/" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">light655</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="/blab.html">Blab</a></li>
+            <li><a href="/Blog/">Blog</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="/docs/">Documentation</a></li>
+            <li><a href="/Product/">Product</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="/Blog/stm32h755zi_debug.html" rel="bookmark" title="Permalink to Setting up VSCode for debugging STM32H755ZI dual-core microcontroller.">
+          <time class="m-date" datetime="2026-09-13T00:00:00+08:00">
+            Sep <span class="m-date-day">13</span> 2026
+          </time>
+          Setting up VSCode for debugging STM32H755ZI dual-core microcontroller.
+        </a></h1>
+        <p>Debugging a dual-core STM32 microcontroller requires some effort to setup.
+        In this article, I will briefly go over the process of setting up VSCode (with STM32Cube Extensions) to debug a dual-core STM32H755ZI microcontroller.
+        The development board that I am using is the Nucleo-H755ZI, which has a built-in STLINK V3.
+        I will focus on the problems that I ran into and the solutions to them.</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<section id="example-project">
+<h2>Example project.</h2>
+<p>Let's setup a simple project for debugging.
+After selecting the STM32H755ZI CPU in CubeMX, we are only going to change a few settings.
+First, enable the two GPIOs that are connected to the LEDs on the Nucleo board, which are PB14 and PE1.
+We need to assign each of the pins to either of the cores [<a href="https://www.youtube.com/watch?v=jI1k6p-fduE">ref</a>], as shown in the image below.</p>
+<img class="m-image" src="/data/stm32h755zi_debug/h755_gpio.webp" />
+<p>Next, enable the CPU ICache and CPU DCache on the Cortex M7 core, as shown in the image below.</p>
+<img class="m-image" src="/data/stm32h755zi_debug/h755_cache.webp" />
+<p>I am going to leave the RCC settings as default, which uses the internal oscillator and runs the CPUs at 64 MHz.
+Finally, I will select CMake as the toolchain, so that we can build the binaries easily with VSCode.</p>
+<img class="m-image" src="/data/stm32h755zi_debug/h755_cmake.webp" />
+<p>CubeMX will generate two folders named CM4 and CM7 under the selected directory, which contain the code to run the Cortex M4 and Cortex M7 cores, respectively.
+In each of them, under the <code class="m-code"><span class="n">Core</span><span class="o">/</span><span class="n">Src</span><span class="w"> </span><span class="n">directory</span></code>, a <code class="m-code"><span class="n">main</span><span class="p">.</span><span class="n">c</span></code> can be found.
+After building the project, it will generate two binaries, which will run on either of the cores.
+In both <code class="m-code"><span class="n">main</span><span class="p">.</span><span class="n">c</span></code>, we are just going to blink an LED.</p>
+<pre class="m-code"><span class="c1">// inside main.c for M4</span>
+<span class="cm">/* USER CODE BEGIN WHILE */</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* USER CODE END WHILE */</span>
+
+<span class="w">    </span><span class="cm">/* USER CODE BEGIN 3 */</span>
+<span class="w">    </span><span class="c1">// blink red LED</span>
+<span class="w">    </span><span class="n">HAL_GPIO_WritePin</span><span class="p">(</span><span class="n">GPIOB</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_PIN_14</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_PIN_SET</span><span class="p">);</span>
+<span class="w">    </span><span class="n">HAL_Delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="w">    </span><span class="n">HAL_GPIO_WritePin</span><span class="p">(</span><span class="n">GPIOB</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_PIN_14</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_PIN_RESET</span><span class="p">);</span>
+<span class="w">    </span><span class="n">HAL_Delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cm">/* USER CODE END 3 */</span></pre>
+<pre class="m-code"><span class="c1">// inside main.c for M7</span>
+<span class="cm">/* USER CODE BEGIN WHILE */</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* USER CODE END WHILE */</span>
+
+<span class="w">    </span><span class="cm">/* USER CODE BEGIN 3 */</span>
+<span class="w">    </span><span class="c1">// blink yellow LED</span>
+<span class="w">    </span><span class="n">HAL_GPIO_WritePin</span><span class="p">(</span><span class="n">GPIOE</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_PIN_1</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_PIN_SET</span><span class="p">);</span>
+<span class="w">    </span><span class="n">HAL_Delay</span><span class="p">(</span><span class="mi">250</span><span class="p">);</span>
+<span class="w">    </span><span class="n">HAL_GPIO_WritePin</span><span class="p">(</span><span class="n">GPIOE</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_PIN_1</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_PIN_RESET</span><span class="p">);</span>
+<span class="w">    </span><span class="n">HAL_Delay</span><span class="p">(</span><span class="mi">250</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cm">/* USER CODE END 3 */</span></pre>
+</section>
+<section id="launch-json-setup">
+<h2>launch.json setup.</h2>
+<p><a href="https://community.st.com/stm32-mcus-60/how-to-debug-stm32h7-dual-core-using-vs-code-158900">A Great tutorial post</a> by B. Montanari shows an example of <code class="m-code"><span class="n">launch</span><span class="p">.</span><span class="n">json</span></code> for debugging dual core STM32 microcontroller with VSCode.
+He also explained the modification from the default launch.json in great detail.
+The <code class="m-code"><span class="n">launch</span><span class="p">.</span><span class="n">json</span><span class="err">`</span></code> that we are using is a slightly modified version, with the file names changed to match the example project.</p>
+<pre class="m-code"><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Use IntelliSense to learn about possible attributes.</span>
+<span class="w">    </span><span class="c1">// Hover to view descriptions of existing attributes.</span>
+<span class="w">    </span><span class="c1">// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387</span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.2.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stlinkgdbtarget&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ST-LINK for M4&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;origin&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;snippet&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;cwd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="c1">// &quot;preBuild&quot;: &quot;${command:st-stm32-ide-debug-launch.build}&quot;,</span>
+<span class="w">            </span><span class="nt">&quot;runEntry&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;imagesAndSymbols&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">   </span><span class="c1">// extra</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;symbolFileName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}/CM4/build/h755_hello_CM4.elf&quot;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;serverShared&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">   </span><span class="c1">// extra</span>
+<span class="w">            </span><span class="nt">&quot;serverApID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="w">      </span><span class="c1">// extra</span>
+<span class="w">            </span><span class="nt">&quot;serverPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;61239&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// extra</span>
+<span class="w">            </span><span class="nt">&quot;serverReset&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;None&quot;</span><span class="w">   </span><span class="c1">// extra</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stlinkgdbtarget&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ST-LINK for M7&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;origin&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;snippet&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;cwd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;preBuild&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${command:st-stm32-ide-debug-launch.build}&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;runEntry&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;imagesAndSymbols&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">   </span><span class="c1">// extra, beware of the order of the two .elf files</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;imageFileName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}/CM4/build/h755_hello_CM4.elf&quot;</span>
+<span class="w">                </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;imageFileName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}/CM7/build/h755_hello_CM7.elf&quot;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;serverShared&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">       </span><span class="c1">// extra</span>
+<span class="w">            </span><span class="nt">&quot;serverHaltAllCores&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">  </span><span class="c1">// extra</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;compounds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">                      </span><span class="c1">// extra</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ST-LINK for M7+M4&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ST-LINK for M7&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ST-LINK for M4&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span></pre>
+<p>I will briefly explain the important settings, but please be sure to look at <a href="https://community.st.com/stm32-mcus-60/how-to-debug-stm32h7-dual-core-using-vs-code-158900">Montanari's post</a> for more detail.
+There are two configurations, the first one connects to the M4 core and the second one connects to the M7 core and flashes the program to both cores.
+In the <code class="m-code"><span class="n">imagesAndSymbols</span></code> attribute, we need to set the image or symbol file.
+For the M4, we only set the <strong>symbol</strong> file, as its image is flashed by the M7 core.
+For the M7, we set two <strong>image</strong> files, which will be flashed to M4 and M7 cores, respectively.</p>
+<aside class="m-note m-danger">
+Please beware of the order of the image files.
+The M4 image file should be the first one and the M7's be the second one.
+If they are out of order, the STM32 will be bricked.</aside>
+<p>The blocks marked as extra in the above listing means that they are not in the VSCode-generated STLINK template <code class="m-code"><span class="n">launch</span><span class="p">.</span><span class="n">json</span></code>.
+If you use the generated template for the M4 configuration, be sure to comment out the preBuild attribute.
+Otherwise, the binaries will be compiled twice and errors will occur.
+Finally, since we need to launch two configurations, a compound is created to make our lives easier.</p>
+</section>
+<section id="start-debugging">
+<h2>Start debugging!</h2>
+<p>To start debugging, go to the debug tab and select the ST-LINK for M7+M4 option.
+Remember to connect the Nucleo board to the computer with a USB cable.</p>
+<img class="m-image" src="/data/stm32h755zi_debug/h755_debug_option.webp" />
+<p>Then, click the green triangle to start debugging.
+An ST-LINK GDB server will be started and the project will be rebuilt and flashed to the two cores.
+At first, the Cortex M4 core will pause on the <code class="m-code"><span class="n">Reset_Handler</span></code> or the entry point of the <code class="m-code"><span class="n">main</span><span class="p">()</span></code> function.
+I do not know why there are two possible points that the M4 core initially pauses at.
+The Coretex M7 core will pause on the entry point of the <code class="m-code"><span class="n">main</span><span class="p">()</span></code> function.</p>
+<img class="m-image" src="/data/stm32h755zi_debug/h755_debug_start.webp" />
+<p>To start running the programs, we need to start the two cores in a specific order.
+First, click continue for the M4 core.
+If the M4 core paused again at the entry point of the <code class="m-code"><span class="n">main</span><span class="p">()</span></code> function, click continue again.
+The M4 core will show <code class="m-code"><span class="n">Paused</span><span class="w"> </span><span class="n">On</span><span class="w"> </span><span class="n">SIGTRAP</span></code>, which is expected as it is stopped and waiting for the M7 core to start.
+Next, click continue for the M7 core and the program will start running.
+Otherwise, the M7 core will go into the <code class="m-code"><span class="n">Error_Handler</span><span class="p">()</span></code> and the microcontroller will halt.
+I recorded a video to show the process in detail, you can watch it <a href="https://youtu.be/6J5jDuCMtW0">here</a>.</p>
+<p>The reason behind this specific order is the boot sequence of the two cores.
+The M4 core boots up first, but it needs to wait for the M7 core to finish setting up the system clock.
+Therefore, the M7 core first waits for the M4 core to enter stop mode.
+If the M4 core does not enter stop mode within a timeout, the M7 core jumps to the <code class="m-code"><span class="n">Error_Handler</span><span class="p">()</span></code>.
+This happens if the M7 core starts running first, while we still haven't started the M4 core.</p>
+<pre class="m-code"><span class="c1">// code generated by CubeMX</span>
+<span class="cp">#if defined(DUAL_CORE_BOOT_SYNC_SEQUENCE)</span>
+<span class="w">    </span><span class="cm">/* Wait until CPU2 boots and enters in stop mode or timeout*/</span>
+<span class="w">    </span><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0xFFFF</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="p">((</span><span class="n">__HAL_RCC_GET_FLAG</span><span class="p">(</span><span class="n">RCC_FLAG_D2CKRDY</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">RESET</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">timeout</span><span class="o">--</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">timeout</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Error_Handler</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="cp">#endif </span><span class="cm">/* DUAL_CORE_BOOT_SYNC_SEQUENCE */</span></pre>
+<aside class="m-note m-danger">
+The order in which the cores are continued is very important.
+Make sure that the M4 core starts running before the M7 core.
+Otherwise, the microcontroller will crash.</aside>
+</section>
+<section id="troubleshooting-guide">
+<h2>Troubleshooting guide.</h2>
+<ul>
+<li>The order of the two image files in <code class="m-code"><span class="n">launch</span><span class="p">.</span><span class="n">json</span></code> is crucial.
+It must be M4 first, M7 second.
+Otherwise, the STM32 will be bricked.</li>
+<li>Don't put breakpoints on the two lines that enable the M7 caches.
+Also, don't try to single-step through these functions, it will cause the CPU to hang [<a href="https://community.st.com/stm32-mcus-products-25/debugger-hangs-at-scb-enabledcache-128233">ref</a>].</li>
+<li>If you are getting <code class="m-code"><span class="n">connection</span><span class="w"> </span><span class="n">timeout</span></code> or <code class="m-code"><span class="n">Unable</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">get</span><span class="w"> </span><span class="n">core</span><span class="w"> </span><span class="n">ID</span></code> [<a href="https://community.st.com/stm32-mcus-wireless-35/error-unable-to-get-core-id-134461">ref</a>] errors, try swapping the USB cable.</li>
+<li>If you see the error message <code class="m-code"><span class="n">No</span><span class="w"> </span><span class="n">device</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">target</span><span class="p">.</span></code> [<a href="https://community.st.com/stm32cubeide-mcus-28/error-in-initializing-st-link-device-reason-no-device-found-on-target-stm32h755-129278">ref</a>] or <code class="m-code"><span class="n">doStepSettingsValidation</span><span class="w"> </span><span class="n">Failed</span><span class="o">:</span><span class="w"> </span><span class="n">Core</span><span class="w"> </span><span class="n">not</span><span class="w"> </span><span class="n">found</span></code>, that means your STM32 is probably bricked due to flashing the wrong image.</li>
+<li>If you see the error message <code class="m-code"><span class="n">build</span><span class="w"> </span><span class="n">failed</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">code</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="n">stdout</span><span class="o">:</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">stderr</span><span class="o">:</span></code>, check if the project is compiled twice in <code class="m-code"><span class="n">launch</span><span class="p">.</span><span class="n">json</span></code>.</li>
+</ul>
+</section>
+<section id="accidentally-bricking-the-stm32">
+<h2>Accidentally bricking the STM32?</h2>
+<p>If the STM32 is accidentally bricked, we can use the BOOT0 pin to make the STM32 bypass the binaries that we've flashed.</p>
+<ol>
+<li>Make sure the order of the image files in <code class="m-code"><span class="n">launch</span><span class="p">.</span><span class="n">json</span></code> is correct.</li>
+<li>Short BOOT0 to 3.3V on the STM32, which is third and forth pins on the left-most row of pins.
+I use tweezers to short them.</li>
+</ol>
+<img class="m-image" src="/data/stm32h755zi_debug/h755_boot0.webp" />
+<ol start="3">
+<li>Press the reset button.</li>
+<li>Remove the short between BOOT0 and 3.3V.</li>
+<li>Flash the STM32 with the correct debugger settings.</li>
+</ol>
+</section>
+<section id="references">
+<h2>References</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=jI1k6p-fduE">Great tutorial video</a> by ControllersTech on debugging dual core STM32s with CubeIDE.</li>
+<li><a href="https://community.st.com/stm32-mcus-60/how-to-debug-stm32h7-dual-core-using-vs-code-158900">Great tutorial post</a> by B. Montanari on debugging dual core STM32s with VSCode.</li>
+<li><a href="https://community.st.com/stm32-mcus-60/stm32cubeide-for-vs-code-debug-configuration-launch-json-161009">VSCode STM32 debugging launch.json reference</a> by Nawres Gharbi.</li>
+<li>ST Community post <a href="https://community.st.com/stm32-mcus-products-25/debugger-hangs-at-scb-enabledcache-128233">Debugger hangs at SCB_EnableDCache();</a></li>
+<li>ST Community post <a href="https://community.st.com/stm32-mcus-wireless-35/error-unable-to-get-core-id-134461">Error : Unable to get core ID</a></li>
+<li>ST Community post <a href="https://community.st.com/stm32cubeide-mcus-28/error-in-initializing-st-link-device-reason-no-device-found-on-target-stm32h755-129278">Error in initializing ST-LINK device. Reason: No device found on target.(Stm32H755)</a></li>
+</ul>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2026-09-13T00:00:00+08:00">Sun 13 September 2026</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-09-13T00:00:00+08:00">Sun 13 September 2026</time></span></p>
+      </footer>
+    </article>
+<!--     <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="/Blog/">Blog</a></li>
+        <li><a href="/Product/">Product</a></li>
+      </ol>
+      <h3>Tag cloud</h3>
+      <ul class="m-tagcloud">
+        <li class="m-tag-2"><a href="/tag/8-bit.html">8-bit</a></li>
+        <li class="m-tag-2"><a href="/tag/adc.html">ADC</a></li>
+        <li class="m-tag-2"><a href="/tag/ads1115.html">ADS1115</a></li>
+        <li class="m-tag-3"><a href="/tag/arduino.html">Arduino</a></li>
+        <li class="m-tag-5"><a href="/tag/breadboard.html">Breadboard</a></li>
+        <li class="m-tag-2"><a href="/tag/display.html">Display</a></li>
+        <li class="m-tag-2"><a href="/tag/drv8825.html">DRV8825</a></li>
+        <li class="m-tag-2"><a href="/tag/efuse.html">eFuse</a></li>
+        <li class="m-tag-2"><a href="/tag/flash.html">Flash</a></li>
+        <li class="m-tag-2"><a href="/tag/fpga.html">FPGA</a></li>
+        <li class="m-tag-2"><a href="/tag/gauss-meter.html">Gauss Meter</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-effect.html">Hall Effect</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-sensor.html">Hall Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/hexadecimal.html">Hexadecimal</a></li>
+        <li class="m-tag-2"><a href="/tag/kicad.html">Kicad</a></li>
+        <li class="m-tag-2"><a href="/tag/openocd.html">OpenOCD</a></li>
+        <li class="m-tag-2"><a href="/tag/overcurrent-protection.html">Overcurrent Protection</a></li>
+        <li class="m-tag-2"><a href="/tag/pmod.html">PMOD</a></li>
+        <li class="m-tag-2"><a href="/tag/power-supply.html">Power Supply</a></li>
+        <li class="m-tag-2"><a href="/tag/raspberry-pi-pico.html">Raspberry Pi Pico</a></li>
+        <li class="m-tag-2"><a href="/tag/register.html">Register</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2040.html">RP2040</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2350.html">RP2350</a></li>
+        <li class="m-tag-2"><a href="/tag/sensor.html">Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/serial-wire-debug.html">Serial Wire Debug</a></li>
+        <li class="m-tag-2"><a href="/tag/simulation.html">Simulation</a></li>
+        <li class="m-tag-2"><a href="/tag/spice.html">SPICE</a></li>
+        <li class="m-tag-2"><a href="/tag/st7735.html">ST7735</a></li>
+        <li class="m-tag-2"><a href="/tag/stepper-motor.html">Stepper Motor</a></li>
+        <li class="m-tag-4"><a href="/tag/stm32.html">STM32</a></li>
+        <li class="m-tag-2"><a href="/tag/swd.html">SWD</a></li>
+        <li class="m-tag-2"><a href="/tag/timer.html">Timer</a></li>
+        <li class="m-tag-3"><a href="/tag/tmag5170.html">TMAG5170</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+ -->
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>light655. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
