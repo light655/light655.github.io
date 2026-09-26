@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <title>A GUI piece wise linear waveform editor. | light655</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="/static/m-dark.css" />
+  <link rel="canonical" href="/Blog/pwl_editor.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#cb4b16" />
+  <meta property="og:site_name" content="light655" />
+  <meta property="og:title" content="A GUI piece wise linear waveform editor." />
+  <meta name="twitter:title" content="A GUI piece wise linear waveform editor." />
+  <meta property="og:url" content="/Blog/pwl_editor.html" />
+  <meta property="og:description" content="A simple GUI waveform editor for creating piece wise linear (PWL) waveforms for SPICE simulation." />
+  <meta name="twitter:description" content="A simple GUI waveform editor for creating piece wise linear (PWL) waveforms for SPICE simulation." />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="/" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">light655</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="/blab.html">Blab</a></li>
+            <li><a href="/Blog/">Blog</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="/docs/">Documentation</a></li>
+            <li><a href="/Product/">Product</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="/Blog/pwl_editor.html" rel="bookmark" title="Permalink to A GUI piece wise linear waveform editor.">
+          <time class="m-date" datetime="2026-09-26T00:00:00+08:00">
+            Sep <span class="m-date-day">26</span> 2026
+          </time>
+          A GUI piece wise linear waveform editor.
+        </a></h1>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Piece wise linear (PWL) waveforms are commonly used in SPICE simulations.
+It can be used to approximate a complex signal source at the input of the circuit.
+It is also used when simulating a load step at the output of the circuit.
+SPICE simulators only takes text input and the PWL waveforms becomes a long string of text.
+While it is possible to store the PWL waveform in another file, we still need to edit it as a text file.
+The editing process is non-intuitive and typically requires going back and forth between the editor and simulator a few times to get the correct waveform.</p>
+<p>To solve this issue, (Gemini and) I coded a GUI-based PWL waveform editor.
+The waveform is displayed on a graph as you edit it, so you can get a good idea of the actual waveform.
+The points on the PWL waveform can be dragged around with your mouse or given explicit coordinates with your keyboard.
+The waveform can be saved to a CSV file and loaded to the SPICE simulator.</p>
+<img class="m-image" src="/data/pwl_editor/pwl_demo.webp" />
+<section id="setup-from-source-code">
+<h2>Setup from source code.</h2>
+<p>First, clone the repository from <a href="https://github.com/light655/pwl_waveform_editor">my Github repository</a>.</p>
+<pre class="m-code">git<span class="w"> </span>clone<span class="w"> </span>https://github.com/light655/pwl_waveform_editor.git</pre>
+<p>Then, install the required Python packages.</p>
+<pre class="m-code">pip3<span class="w"> </span>install<span class="w"> </span>PySide6<span class="w"> </span>pyqtgraph</pre>
+<p>Finally, run the program.</p>
+<pre class="m-code">python3<span class="w"> </span>main.py</pre>
+</section>
+<section id="packaged-application">
+<h2>Packaged application.</h2>
+<p>Sometimes, the SPICE server is cut-off from the internet and installing packages becomes a headache.
+Therefore, I packaged the application into a single zipped file containing all the required packages with <a href="https://nuitka.net/">Nuitka</a>.
+The packaged application can be downloaded from the <a href="https://github.com/light655/pwl_waveform_editor/releases">Github release page</a> .</p>
+<p>To install the packaged application, you only need to unzip the file and run <code class="m-code">main.bin</code> on Linux systems or <code class="m-code">main.exe</code> on Windows systems.</p>
+</section>
+<section id="usage">
+<h2>Usage.</h2>
+<p>After starting the program, you will see a blank canvas on which you can create the PWL waveform.
+The following hotkeys can be used to modify the points on the PWL waveform.
+These functions can also be accessed via the edit menu.
+SPICE unit multiplier is supported when typing in the coordinates.</p>
+<ul>
+<li>A - Add new point: type the coordinates of the new point.</li>
+<li>D - Remove selected point.</li>
+<li>M - Move selected point: type the coordinates of the new position of the point.</li>
+</ul>
+<p>You can use your mouse to select and drag around a point on the PWL waveform.
+Note that when dragging a point, its x coordinate is limited between the two adjacent points to preserve the order of the points.
+You can also use your mouse to drag around and zoom in and out the canvas.
+There is a hidden button on the bottom left of the canvas, you can press it to centre the waveform on the canvas.</p>
+<p>A <em>Use Unit Multiplier</em> option is implemented on the bottom left of the window.
+When checked, the coordinates displayed on the bottom right and exported into the CSV file will be formatted with SPICE unit multiplier.
+To import or export the waveform, please use the options in the file menu.</p>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2026-09-26T00:00:00+08:00">Sat 26 September 2026</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-09-26T00:00:00+08:00">Sat 26 September 2026</time></span></p>
+      </footer>
+    </article>
+<!--     <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="/Blog/">Blog</a></li>
+        <li><a href="/Product/">Product</a></li>
+      </ol>
+      <h3>Tag cloud</h3>
+      <ul class="m-tagcloud">
+        <li class="m-tag-2"><a href="/tag/8-bit.html">8-bit</a></li>
+        <li class="m-tag-2"><a href="/tag/adc.html">ADC</a></li>
+        <li class="m-tag-2"><a href="/tag/ads1115.html">ADS1115</a></li>
+        <li class="m-tag-3"><a href="/tag/arduino.html">Arduino</a></li>
+        <li class="m-tag-5"><a href="/tag/breadboard.html">Breadboard</a></li>
+        <li class="m-tag-2"><a href="/tag/display.html">Display</a></li>
+        <li class="m-tag-2"><a href="/tag/drv8825.html">DRV8825</a></li>
+        <li class="m-tag-2"><a href="/tag/efuse.html">eFuse</a></li>
+        <li class="m-tag-2"><a href="/tag/flash.html">Flash</a></li>
+        <li class="m-tag-2"><a href="/tag/fpga.html">FPGA</a></li>
+        <li class="m-tag-2"><a href="/tag/gauss-meter.html">Gauss Meter</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-effect.html">Hall Effect</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-sensor.html">Hall Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/hexadecimal.html">Hexadecimal</a></li>
+        <li class="m-tag-2"><a href="/tag/kicad.html">Kicad</a></li>
+        <li class="m-tag-2"><a href="/tag/openocd.html">OpenOCD</a></li>
+        <li class="m-tag-2"><a href="/tag/overcurrent-protection.html">Overcurrent Protection</a></li>
+        <li class="m-tag-2"><a href="/tag/pmod.html">PMOD</a></li>
+        <li class="m-tag-2"><a href="/tag/power-supply.html">Power Supply</a></li>
+        <li class="m-tag-2"><a href="/tag/raspberry-pi-pico.html">Raspberry Pi Pico</a></li>
+        <li class="m-tag-2"><a href="/tag/register.html">Register</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2040.html">RP2040</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2350.html">RP2350</a></li>
+        <li class="m-tag-2"><a href="/tag/sensor.html">Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/serial-wire-debug.html">Serial Wire Debug</a></li>
+        <li class="m-tag-2"><a href="/tag/simulation.html">Simulation</a></li>
+        <li class="m-tag-2"><a href="/tag/spice.html">SPICE</a></li>
+        <li class="m-tag-2"><a href="/tag/st7735.html">ST7735</a></li>
+        <li class="m-tag-2"><a href="/tag/stepper-motor.html">Stepper Motor</a></li>
+        <li class="m-tag-4"><a href="/tag/stm32.html">STM32</a></li>
+        <li class="m-tag-2"><a href="/tag/swd.html">SWD</a></li>
+        <li class="m-tag-2"><a href="/tag/timer.html">Timer</a></li>
+        <li class="m-tag-3"><a href="/tag/tmag5170.html">TMAG5170</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+ -->
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>light655. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

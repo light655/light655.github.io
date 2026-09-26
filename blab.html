@@ -267,6 +267,21 @@ It turns out instead of the 13V/us on the datasheet, I got 0.58V/us.</p>
 I never thought I would be scammed by such a jellybean part.
 Now, I need to buy a proper high slew rate opamp.</p>
 </section>
+<section id="section-7">
+<h2>(2026/09/26)</h2>
+<p>I was packaging my <a href="https://github.com/light655/pwl_waveform_editor">piece wise linear waveform editor</a> with <a href="https://nuitka.net/">Nuitka</a> on Windows.
+The <code class="m-code"><span class="n">pyqtgraph</span></code> package is used in this program and it in turns uses <code class="m-code"><span class="n">QtOpenGL</span></code>.
+I was met with the following error when running the compiled application.</p>
+<pre class="m-code">ModuleNotFoundError:<span class="w"> </span>No<span class="w"> </span>module<span class="w"> </span>named<span class="w"> </span><span class="s1">&#39;PySide6.QtOpenGL&#39;</span></pre>
+<p>So, I Googled this error and somebody ran into the <a href="https://github.com/Nuitka/Nuitka/issues/3908">exact same issue</a> not long ago.
+Nuitka <em>forgets</em> to include <code class="m-code"><span class="n">PySide6</span><span class="o">.</span><span class="n">QtOpenGL</span></code>.
+On the Github issue page, the developer of Nuitka said it was fixed in August.
+But why am I getting this error in September?</p>
+<p>It turns out that I was still using the version of Nuitka that I compiled my gauss meter firmware with, which was probably from April.
+Therefore, I update Nuitka to the latest version.</p>
+<pre class="m-code">pip3<span class="w"> </span>install<span class="w"> </span>--update<span class="w"> </span>nuitka</pre>
+<p>Great news! Now the OpenGL module is correctly included. Thanks to the developers at Nuitka for fixing the issue!</p>
+</section>
 <!-- /content -->
       </div>
     </div>
