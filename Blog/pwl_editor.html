@@ -99,9 +99,54 @@ There is a hidden button on the bottom left of the canvas, you can press it to c
 When checked, the coordinates displayed on the bottom right and exported into the CSV file will be formatted with SPICE unit multiplier.
 To import or export the waveform, please use the options in the file menu.</p>
 </section>
+<section id="loading-pwl-waveform-into-ngspice-kicad">
+<h2>Loading PWL waveform into Ngspice/KiCad.</h2>
+<p>I use Cadence Virtuoso for my school projects and loading a PWL file is as simple as choosing the <code class="m-code">vpwlf</code> or <code class="m-code">ipwlf</code> symbol and entering the filename.
+For projects outside of school, I use KiCad and Ngspice for simulation.
+Loading a PWL waveform (stored in a file) into Ngspice is a bit more trickier.
+We need to define a model using <a href="https://ngspice.sourceforge.io/docs/ngspice-manual.pdf#subsection.8.2.9">Filesource</a> and wrap it in code model element [<a href="https://forum.kicad.info/t/how-to-load-a-pwl-signal-from-a-file-vpwl-source-error/69391/4">ref</a>].
+Please refer to the <a href="https://forum.kicad.info/t/how-to-load-a-pwl-signal-from-a-file-vpwl-source-error/69391/2">reference KiCad forum post</a> for the wrapper code for PWL voltage source.</p>
+<p>I need a current source in my simulation, so I will demonstrate how to create a PWL current source.
+<code class="m-code">%i</code> and <code class="m-code">%id</code> represent a current source.
+The former is single-ended, which has one node fixed to circuit ground.
+The latter is differential, both nodes can be connected to user specified nodes.
+We will use <code class="m-code">%id</code> to create a more versatile current source.</p>
+<pre class="m-code"><span class="p">.</span><span class="nx">subckt</span><span class="w"> </span><span class="nx">i_load</span><span class="w"> </span><span class="nx">i_in</span><span class="w"> </span><span class="nx">i_out</span><span class="w"> </span><span class="nx">params</span><span class="p">:</span><span class="w"> </span><span class="nx">infile</span><span class="p">=</span><span class="err">&#39;</span><span class="nx">infile</span><span class="err">&#39;</span>
+<span class="nx">a0</span><span class="w"> </span><span class="o">%</span><span class="nx">id</span><span class="p">([</span><span class="nx">i_in</span><span class="w"> </span><span class="nx">i_out</span><span class="p">])</span><span class="w"> </span><span class="nx">filesrc</span>
+<span class="p">.</span><span class="nx">model</span><span class="w"> </span><span class="nx">filesrc</span><span class="w"> </span><span class="nx">filesource</span><span class="w"> </span><span class="p">(</span><span class="nx">file</span><span class="p">=</span><span class="err">&#39;</span><span class="nx">infile</span><span class="err">&#39;</span><span class="w"> </span><span class="nx">amploffset</span><span class="p">=[</span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="nx">amplscale</span><span class="p">=[</span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="p">])</span>
+<span class="p">.</span><span class="nx">ends</span></pre>
+<p>Next, we can create a waveform with the PWL waveform editor.
+I am going to simulate a load-step on the output of an opamp.
+The exported PWL waveform is shown below.</p>
+<pre class="m-code"><span class="mi">0</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">5e-05</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">5.1e-05</span><span class="p">,</span><span class="mf">0.01</span>
+<span class="mf">0.00015</span><span class="p">,</span><span class="mf">0.01</span>
+<span class="mf">0.000151</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.00025</span><span class="p">,</span><span class="mi">0</span></pre>
+<aside class="m-note m-info">
+Although the Ngspice manual states that the entries in the PWL source file are separated with spaces, commas also work in my testing.</aside>
+<img class="m-image" src="/data/pwl_editor/pwl_pulse.webp" />
+<aside class="m-note m-danger">
+Filesource does not recognise unit multipliers such as 10u=1e-06.
+Please uncheck the use unit multiplier option before exporting the waveform.</aside>
+<p>I am trying to simulate the effect of putting capacitors at the output of an opamp.
+The circuit schematic for testing is shown below.</p>
+<img class="m-image" src="/data/pwl_editor/pwl_test_schematic.webp" />
+<p>We can reuse the built-in PWL current source symbol in KiCad, but with some modifications.
+First, delete the SPICE simulation parameters (the purple text below IPWL).
+Next, change the simulation model to use the one we just created.
+Set pin 1 of the symbol to <em>i_in</em> and pin 2 to <em>i_out</em>, and then positive current will flow in the direction of the arrow on the symbol.
+Finally, add a text on the schematic and use <code class="m-code">.param<span class="w"> </span><span class="nv">infile</span><span class="o">=</span><span class="s2">&quot;your file&quot;</span></code> to point the simulator to the file exported from the PWL waveform editor.</p>
+<img class="m-image" src="/data/pwl_editor/pwl_model_selection.webp" />
+<img class="m-image" src="/data/pwl_editor/pwl_model_pins.webp" />
+<p>Setup a transient simulation in the simulator and we can verify the PWL pulse is correctly generated.
+Hopefully this tool is useful in your simulations!</p>
+<img class="m-image" src="/data/pwl_editor/pwl_simulation_result.webp" />
+</section>
 <!-- /content -->
       <footer>
-        <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2026-09-26T00:00:00+08:00">Sat 26 September 2026</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-09-26T00:00:00+08:00">Sat 26 September 2026</time></span></p>
+        <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2026-09-26T00:00:00+08:00">Sat 26 September 2026</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-09-28T00:00:00+08:00">Mon 28 September 2026</time></span></p>
       </footer>
     </article>
 <!--     <nav class="m-navpanel m-col-m-2">
