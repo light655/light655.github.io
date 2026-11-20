@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <title>Looking back at my 4 years working behind NTHUEE's light dance performance. | light655</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="/static/m-dark.css" />
+  <link rel="canonical" href="/Blog/light_dance.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#cb4b16" />
+  <meta property="og:site_name" content="light655" />
+  <meta property="og:title" content="Looking back at my 4 years working behind NTHUEE's light dance performance." />
+  <meta name="twitter:title" content="Looking back at my 4 years working behind NTHUEE's light dance performance." />
+  <meta property="og:url" content="/Blog/light_dance.html" />
+  <meta property="og:description" content="EE Night is an annual show organised by NTHUEE students. Of all the performances, the light dance show combines dancing and engineering to deliver complex visual effects synchronised with the choreography and rhythm. On the stage, dancers wear costumes fitted with light strips and a controller, and dance in the darkness. The lights are synchronised to toggle at precise moments to present the choreography and inject excitement into the performance. Behind the scenes, a team of students designed and implemented a system to design the light effects and control the lights on the costumes." />
+  <meta name="twitter:description" content="EE Night is an annual show organised by NTHUEE students. Of all the performances, the light dance show combines dancing and engineering to deliver complex visual effects synchronised with the choreography and rhythm. On the stage, dancers wear costumes fitted with light strips and a controller, and dance in the darkness. The lights are synchronised to toggle at precise moments to present the choreography and inject excitement into the performance. Behind the scenes, a team of students designed and implemented a system to design the light effects and control the lights on the costumes." />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
+  <script data-goatcounter="https://light655.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="/" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">light655</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="/blab.html">Blab</a></li>
+            <li><a href="/Blog/">Blog</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="/docs/">Documentation</a></li>
+            <li><a href="/Product/">Product</a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="/Blog/light_dance.html" rel="bookmark" title="Permalink to Looking back at my 4 years working behind NTHUEE's light dance performance.">
+          <time class="m-date" datetime="2026-11-15T00:00:00+08:00">
+            Nov <span class="m-date-day">15</span> 2026
+          </time>
+          Looking back at my 4 years working behind NTHUEE's light dance performance.
+        </a></h1>
+        <p>EE Night is an annual show organised by NTHUEE students.
+        Of all the performances, the light dance show combines dancing and engineering to deliver complex visual effects synchronised with the choreography and rhythm.
+        On the stage, dancers wear costumes fitted with light strips and a controller, and dance in the darkness.
+        The lights are synchronised to toggle at precise moments to present the choreography and inject excitement into the performance.
+        Behind the scenes, a team of students designed and implemented a system to design the light effects and control the lights on the costumes.</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<figure class="m-figure">
+<img src="/data/light_dance/stage_2024.webp" />
+<figcaption>The performance in 2024.</figcaption>
+</figure>
+<p>I have been involved in light dance performances since I was a freshman.
+In 2023, I was both a dancer and an engineer.
+EE Night was cancelled for two years because of COVID-19, and on the engineering side, we only inherited a few Arduino scripts and an Excel spreadsheet.
+Previously, the light effects were designed in an Excel spreadsheet.
+The time stamps at which a specific light is turned on or off were manually typed into the spreadsheet.
+The numbers in the spreadsheet could not visually provide any insights into the effects that were being designed and often led to mistakes that we could only find when the effects were transferred onto the costumes.
+This discouraged us from designing more complex effects and time was often wasted on syncing the time stamps in the spreadsheet to the music.</p>
+<figure class="m-figure">
+<img src="/data/light_dance/light_as_music.webp" />
+<figcaption>Designing the light effects as music on a musical score.<div class="m-figure-description">
+This score is from 2026, it consists of 6 parts, one for each dancer.</div>
+</figcaption>
+</figure>
+<p>I thought, since we needed to sync the lights to the music, why don't we treat the lights as music and design the effects on a musical score?
+To achieve this, we assigned the 3 lights on each dancer to 3 different musical notes, and wrote a score with 6 parts to design the light effects for all 6 dancers.
+I developed a program to extract the time stamps of the notes from a MIDI file and convert them into a C array.
+The array was then included in a program that runs on a Raspberry Pi RP2040 microcontroller which controls the individual light strips on the dancers.
+The hardware design in 2023 was a very simple system.
+It had a microcontroller and three transistors controlling three electroluminescent (EL) strips with off-the-shelf drivers.
+Apart from my terrible dancing, the performance was a success.
+We were able to create some stunning effects such as teleporting limbs across the stage and dancers appearing in mid-air.</p>
+<figure class="m-figure">
+<img src="/data/light_dance/costume_2024.webp" />
+<figcaption>The costumes that the dancers wear during the performance.<div class="m-figure-description">
+The EL strips are attached to black hoodies and trousers to outline the contour of the dancers in the dark.
+The green packets on the costumes are 乖乖 cookies.
+Taiwanese people believe these cookies can bring good luck, and we put them on computers and machines to make sure they work normally.</div>
+</figcaption>
+</figure>
+<p>In 2024, I focused on the hardware.
+We previously found that EL strips have very different brightnesses even if we drive them with the same voltage.
+We couldn't use PWM to change the brightness, since the EL driver needed to generate a high-voltage AC waveform from a steady DC input.
+At the time, I was taking the control systems course in our department and just getting started in feedback control.
+Therefore, I built a current-mode driver with an LDO and a digital potentiometer as the control input, and tried to implement a closed-loop control system.
+The idea was that if we supply the same current to the EL driver, the lamps would have the same brightness.
+On top of that, we wanted to send in a ramp command to the control system and achieve ramping brightness.</p>
+<figure class="m-figure">
+<img src="/data/light_dance/pcb_2024.webp" />
+<figcaption>The 2024 PCB with closed-loop current control.<div class="m-figure-description">
+This was my first 4-layer PCB design.
+There are four channels of EL strips, and each channel has a separate feedback controller.</div>
+</figcaption>
+</figure>
+<p>However, the LDO limited the bandwidth of the control loop, and we could not achieve proper current regulation.
+Furthermore, we were only able to control the LDO by changing the feedback voltage divider ratio, which is its feedback sensor.
+Therefore, I couldn't apply the compensator design techniques I had just learned.
+In the end, the closed-loop control didn't work properly and we reverted to setting an individual DC voltage for each EL strip to tune the brightness on each dancer.
+What we learned in 2024 is that EL strips are unreliable and the off-the-shelf drivers are difficult to control.
+We thought about bringing the driver in-house, but the costs and the danger of high voltage forced us to come up with another plan.</p>
+<p>We pivoted to WS2812 RGB LEDs with fibre in 2025.
+The new hardware was designed by my teammates, and I mostly worked on debugging.
+The WS2812 LEDs run on an 800 kHz digital protocol, and we were faced with severe ringing caused by the level shifter and metre-long wiring between the controller and LED modules.
+As a temporary solution, we put series resistors in the signal wires to dampen the ringing.
+The reliability of the WS2812 LEDs was compromised and we ended up with one malfunctioning light on stage.
+We also improved the synchronisation between the light effects and the music.
+Previously, we relied on a set of beats at the beginning of the music and a shared button to reset the controller manually.
+This year, we introduced a master controller to reset the controllers on each dancer and play the music automatically.
+This enabled us to illuminate the dancers at the exact moment the music kicked in, creating a dramatic opening.</p>
+<p>By 2026, the engineers became an independent team of 7 people, mostly consisting of freshmen.
+We were divided into a hardware and a software team.
+Additional funding allowed the introduction of WS2812 strips, which enabled us to create dynamic light effects flowing on the dancers.
+I took both technical and management roles this year.
+I was tasked with improving the signal transmission from the controller to the WS2812 module and reviewing hardware designed by younger students.
+I implemented a differential transmitter for the WS2812 data line with the programmable input/output (PIO) peripheral on the RP2040 in assembly, and designed a demodulation and level shifting circuit on our in-house WS2812 module.
+A sophomore designed the controller PCB, and we went through several revisions together regarding the overall architecture and the layout of the buck converter which handles up to 6 A.
+I also assigned tasks based on each team member’s strengths and set project milestones around fabrication lead time to prevent the progress from stalling.
+In the end, the excitement of the performance was brought to a new level by new dynamic light effects.</p>
+<figure class="m-figure">
+<img src="/data/light_dance/pcb_2026.webp" />
+<figcaption>The PCBs in 2026.<div class="m-figure-description">
+The revised buck converter (left) and the layout of the in-house WS2812 module with differential demodulator.</div>
+</figcaption>
+</figure>
+<p>Working with many freshmen as a last-year student, I realised the need to create a comprehensive hardware design training course for them.
+In our department, PCB design is often a skill learned as a side task in IC design research, which isn’t accessible to first-year students.
+Therefore, I designed and taught an 8-week workshop on PCB design for 4 students using KiCad.
+To develop intuition on component selection for a circuit design, I introduced one category of ICs every week and arranged datasheet reading and presentation homework.
+Standard introductory circuit theory courses often omit the parasitics of components and wires, so in this workshop I prioritised these concepts and their solutions, such as minimising the loop area and placing decoupling capacitors.
+From designing the schematic based on functions and specifications to laying out the components and traces on the PCB, I guided them through the complete PCB design cycle.
+Specifically, we focused on the layout of switch-mode power converters, as it is the most complex part of the controller PCB.</p>
+<p>Looking back at 4 years of progress, we went from 3 EL lamps toggling with fixed colours to almost 200 RGB LEDs with dynamic effects and changing colours.
+With the dedicated team of engineers and the training workshop for first-year students, light dance has become not only a performance, but also an opportunity to develop teamwork and technical skills.
+None of this would have been possible without the hard working engineers behind the scenes and the seamless coordination with the dancers.</p>
+<figure class="m-figure">
+<img src="/data/light_dance/controller_4.webp" />
+<figcaption>The controller boards from 2023 to 2026.<div class="m-figure-description">
+The 2023 and 2024 controller boards are designed by me, and they use electroluminescent strips.
+The 2025 and 2026 controller boards are designed by younger students, and they use RGB LEDs.</div>
+</figcaption>
+</figure>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="/author/liang-yu-chen.html">Liang-Yu Chen</a> on <time datetime="2026-11-15T00:00:00+08:00">Sun 15 November 2026</time> in <a href="/Blog/">Blog</a>. <span class="m-label m-success">updated <time datetime="2026-11-20T00:00:00+08:00">Fri 20 November 2026</time></span></p>
+      </footer>
+    </article>
+<!--     <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="/Blog/">Blog</a></li>
+        <li><a href="/Product/">Product</a></li>
+      </ol>
+      <h3>Tag cloud</h3>
+      <ul class="m-tagcloud">
+        <li class="m-tag-2"><a href="/tag/8-bit.html">8-bit</a></li>
+        <li class="m-tag-2"><a href="/tag/adc.html">ADC</a></li>
+        <li class="m-tag-2"><a href="/tag/ads1115.html">ADS1115</a></li>
+        <li class="m-tag-3"><a href="/tag/arduino.html">Arduino</a></li>
+        <li class="m-tag-5"><a href="/tag/breadboard.html">Breadboard</a></li>
+        <li class="m-tag-2"><a href="/tag/display.html">Display</a></li>
+        <li class="m-tag-2"><a href="/tag/drv8825.html">DRV8825</a></li>
+        <li class="m-tag-2"><a href="/tag/efuse.html">eFuse</a></li>
+        <li class="m-tag-2"><a href="/tag/flash.html">Flash</a></li>
+        <li class="m-tag-2"><a href="/tag/fpga.html">FPGA</a></li>
+        <li class="m-tag-2"><a href="/tag/gauss-meter.html">Gauss Meter</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-effect.html">Hall Effect</a></li>
+        <li class="m-tag-2"><a href="/tag/hall-sensor.html">Hall Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/hexadecimal.html">Hexadecimal</a></li>
+        <li class="m-tag-2"><a href="/tag/kicad.html">Kicad</a></li>
+        <li class="m-tag-2"><a href="/tag/openocd.html">OpenOCD</a></li>
+        <li class="m-tag-2"><a href="/tag/overcurrent-protection.html">Overcurrent Protection</a></li>
+        <li class="m-tag-2"><a href="/tag/pmod.html">PMOD</a></li>
+        <li class="m-tag-2"><a href="/tag/power-supply.html">Power Supply</a></li>
+        <li class="m-tag-2"><a href="/tag/raspberry-pi-pico.html">Raspberry Pi Pico</a></li>
+        <li class="m-tag-2"><a href="/tag/register.html">Register</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2040.html">RP2040</a></li>
+        <li class="m-tag-2"><a href="/tag/rp2350.html">RP2350</a></li>
+        <li class="m-tag-2"><a href="/tag/sensor.html">Sensor</a></li>
+        <li class="m-tag-2"><a href="/tag/serial-wire-debug.html">Serial Wire Debug</a></li>
+        <li class="m-tag-2"><a href="/tag/simulation.html">Simulation</a></li>
+        <li class="m-tag-2"><a href="/tag/spice.html">SPICE</a></li>
+        <li class="m-tag-2"><a href="/tag/st7735.html">ST7735</a></li>
+        <li class="m-tag-2"><a href="/tag/stepper-motor.html">Stepper Motor</a></li>
+        <li class="m-tag-4"><a href="/tag/stm32.html">STM32</a></li>
+        <li class="m-tag-2"><a href="/tag/swd.html">SWD</a></li>
+        <li class="m-tag-2"><a href="/tag/timer.html">Timer</a></li>
+        <li class="m-tag-3"><a href="/tag/tmag5170.html">TMAG5170</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+ -->
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>light655. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
